@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .logoutheader_div {
+    @apply w-full max-[555px]:px-2 max-[900px]:px-5 px-12 max-[555px]:pb-10 max-[900px]:pb-14 pb-16 pt-8 grid grid-cols-[2fr_5fr_2fr] items-center;
+  }
+
+  .logoutheader_icon {
+    @apply w-[40px] h-[40px] fill-starkit-lavender;
+  }
+
+  .logoutheader_h1 {
+    @apply w-full text-starkit-electric max-[555px]:text-2xl text-3xl font-bold text-center;
+  }
+
+  .logoutheader_logout_div {
+    @apply max-[555px]:pt-1 pt-2 flex items-center justify-end cursor-pointer;
+  }
+
+  .logoutheader_logout_span {
+    @apply mr-2 text-starkit-electric max-[420px]:text-base max-[555px]:text-lg text-xl font-bold;
+  }
+
+  .logoutheader_logout_icon {
+    @apply max-[420px]:w-4 max-[555px]:w-5 w-6 max-[420px]:h-4 max-[555px]:h-5 h-6 fill-starkit-lavender;
+  }
+}

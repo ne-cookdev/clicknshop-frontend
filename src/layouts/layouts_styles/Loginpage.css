@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .login_div_register {
+    @apply flex items-center;
+  }
+
+  .login_span_register {
+    @apply w-full text-base font-medium text-center;
+  }
+
+  .login_a_register {
+    @apply text-starkit-electric;
+  }
+}
+
+@media (max-height: 670px) {
+  #footer_login {
+    bottom: 10px;
+  }
+}
