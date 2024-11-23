@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .title_h3 {
+    @apply text-3xl text-center font-bold;
+  }
+
+  .title_span {
+    @apply text-starkit-electric;
+  }
+}

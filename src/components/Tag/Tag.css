@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .tag_div {
+    @apply mr-1.5 max-[425px]:py-0 py-1 max-[425px]:px-2 px-2.5 rounded-[20px] border border-starkit-lavender justify-center items-center inline-flex;
+  }
+
+  .tag_span {
+    @apply text-center text-starkit-bluebell max-[425px]:text-[10px] text-xs font-normal;
+  }
+}

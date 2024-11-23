@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.gradient-text {
+  background-color: #1c24aa;
+  background-image: linear-gradient(90deg, #1c24aa, #b7b8fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@layer components {
+  .cardlesson_background {
+    @apply relative w-full h-full pt-2.5 pb-7 px-3.5 flex flex-col justify-stretch items-center bg-white border border-starkit-lavender rounded-[20px];
+  }
+
+  .cardlesson_name {
+    @apply w-full mb-1 text-base leading-5 font-bold gradient-text text-left;
+  }
+
+  .cardlesson_description {
+    @apply w-full mb-1 text-[10px] font-normal text-black;
+  }
+
+  .cardlesson_start_div {
+    @apply absolute w-full bottom-2.5 right-2.5 flex flex-row justify-end items-center;
+  }
+
+  .cardlesson_start_icon {
+    @apply w-4 h-4 fill-starkit-lavender;
+  }
+}
