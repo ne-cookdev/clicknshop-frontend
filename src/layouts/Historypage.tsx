@@ -2,43 +2,56 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useGetHistoryQuery } from "../features/api/lessonsApi";
+import { useGetHistoryQuery } from "../features/api/api";
 
 import { HistoryCard } from "../components/HistoryCard/HistoryCard";
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
+import { Button } from "../components/Button/Button";
 
 import { HistoryItem } from "../entities/catalog/model/types";
 
 export const Historypage = () => {
-  // запрос данных с бэка
-  //const { data, isLoading: isGettingCourses, isSuccess, isError, error, refetch } = useGetHistoryQuery();
+  // нужно для редиректа
+  const navigate = useNavigate();
 
   // определяем роль пользователя
   const role = localStorage.getItem("role");
 
+  useEffect(() => {
+    if (role === "admin" || role === "staff") {
+      navigate("/");
+    }
+  }, [role, navigate]);
+
+  // запрос данных с бэка
+  //const { data, isLoading: isGettingCourses, isSuccess, isError, error, refetch } = useGetHistoryQuery();
+
+  // Извлекаем данные из localStorage
+  const orderData = JSON.parse(localStorage.getItem("order") ?? "{}");
+
   const data = [
     {
-      name: "Футбольный мяч",
+      id: 4,
+      name: "Бананы",
       image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
-      price: 1237,
+      price: 1,
       quantity: 5,
     },
     {
-      name: "Футбольный мяч",
+      id: 5,
+      name: "Бананы",
       image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
-      price: 1237,
+      price: 1,
       quantity: 5,
     },
     {
-      name: "Футбольный мяч",
+      id: 6,
+      name: "Бананы",
       image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
-      price: 1237,
+      price: 1,
       quantity: 5,
     },
   ];
-
-  // нужно для редиректа
-  const navigate = useNavigate();
 
   // запрос на выход
   const [logoutUser, { isLoading: isLogoutLoading }] = useLogoutUserMutation();
@@ -78,43 +91,43 @@ export const Historypage = () => {
       console.error(error);
     }
   };
+
   useEffect(() => {
     fetchLessons();
-  }, []);*/
+  }, []);
 
-  if (role != "admin" && role != "staff") {
-    /*if (isSuccess) {*/
-    if (data.length === 0) {
-      return (
-        <main className="body_404">
-          <div className="h-dvh flex items-center justify-center flex-col">
-            <img src="/images/robot_404.png" className="mb-6" />
-            <p className="text-starkit-electric font-bold text-7xl text-center">404</p>
-            <p className="text-black font-bold text-2xl text-center mb-5">Вы пока ничего не заказали</p>
+  if (isSuccess) {*/
+  if (data.length == 0) {
+    return (
+      <main className="body_404">
+        <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
+        <div className="py-24 flex items-center justify-center flex-col">
+          <img src="/images/robot_404.png" className="mb-6" />
+          <p className="text-black font-bold text-2xl text-center mb-5">Вы пока ничего не заказали</p>
+          <a className="w-full flex justify-center" href="/catalog">
+            <Button text="Каталог" className="w-[250px]" />
+          </a>
+        </div>
+      </main>
+    );
+  } else {
+    return (
+      <>
+        <main className="bg-starkit-magnolia">
+          <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
+          <div className="flex justify-center flex-col items-center">
+            <div>поиск</div>
+            <div className="grid grid-cols-4 gap-y-12 gap-x-16">
+              {data.map((item: HistoryItem) => (
+                <HistoryCard order={orderData} key={item.id} id={item.id} name={item.name} image={item.image_ref} price={item.price} quantity={item.quantity} />
+              ))}
+            </div>
           </div>
         </main>
-      );
-    } else {
-      return (
-        <>
-          <main className="bg-starkit-magnolia">
-            <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-            <div className="flex justify-center flex-col items-center">
-              <div>поиск</div>
-              <div className="grid grid-cols-4 gap-y-12 gap-x-16">
-                {data.map((item: HistoryItem) => (
-                  <HistoryCard name={item.name} image={item.image_ref} price={item.price} quantity={item.quantity} />
-                ))}
-              </div>
-            </div>
-          </main>
-        </>
-      );
-    }
-    /*} else {
-    return null;
-    }*/
-  } else {
-    navigate("/");
+      </>
+    );
   }
+  /*} else {
+    return null;
+  }*/
 };

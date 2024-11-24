@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { Tag } from "../Tag/Tag";
 import { EditIcon } from "../Icons/EditIcon";
@@ -9,12 +8,14 @@ import { Input } from "../Input/Input";
 
 interface CardProps {
   role: string;
+  id: number;
   category: string;
   name: string;
   description: string;
   image?: string;
   price: number;
   quantity: number;
+  order: any;
 }
 
 // Проверяем, что URL не пустой и соответствует формату изображения
@@ -33,23 +34,59 @@ export const Card: React.FC<CardProps> = (props) => {
   // проверка валидности категории
   const isValidСategory = props.category && /^[\w\sа-яА-ЯёЁ]+$/.test(props.category);
 
+  const updateLocalStorage = (updatedCount: number) => {
+    const currentOrder = JSON.parse(localStorage.getItem("order") ?? "{}");
+    if (currentOrder[props.id]) {
+      currentOrder[props.id].count = updatedCount;
+      localStorage.setItem("order", JSON.stringify(currentOrder));
+    }
+  };
+
   // добавлен ли товар в корзину
   const [isAdded, setIsAdded] = useState<boolean>(false);
   const addToCartHandler = () => {
     setIsAdded(true);
+    const currentOrder = JSON.parse(localStorage.getItem("order") ?? "{}");
+    if (currentOrder[props.id]) {
+      currentOrder[props.id].count += count;
+    } else {
+      currentOrder[props.id] = {
+        id: props.id,
+        name: props.name,
+        image_ref: props.image || null,
+        price: props.price,
+        quantity: props.quantity,
+        count: count,
+      };
+    }
+    localStorage.setItem("order", JSON.stringify(currentOrder));
   };
 
   // выбранное кол-во товара (в инпуте)
-  const [count, setCount] = useState<number>(1);
+  let startValue;
+  if (props.order[props.id]) {
+    startValue = props.order[props.id].count;
+  } else {
+    startValue = 1;
+  }
+  const [count, setCount] = useState<number>(startValue);
 
   // обработчик кнопки "+"
   const minusHandler = () => {
-    setCount((prevCount) => Math.max(prevCount - 1, 1));
+    setCount((prevCount) => {
+      const newCount = Math.max(prevCount - 1, 1);
+      updateLocalStorage(newCount); // Обновляем localStorage
+      return newCount;
+    });
   };
 
   // обработчик кнопки "-"
   const plusHandler = () => {
-    setCount((prevCount) => Math.min(prevCount + 1, props.quantity));
+    setCount((prevCount) => {
+      const newCount = Math.min(prevCount + 1, props.quantity);
+      updateLocalStorage(newCount); // Обновляем localStorage
+      return newCount;
+    });
   };
 
   // обработчик инпута с кол-вом товара
@@ -91,14 +128,26 @@ export const Card: React.FC<CardProps> = (props) => {
           </div>
         ) : (
           <>
-            {!isAdded ? (
+            {!props.order[props.id] ? (
               <>
-                {/* сначала это */}
-                <Button onClick={addToCartHandler} text="Добавить в корзину" />
+                {!isAdded ? (
+                  <>
+                    {/* сначала это */}
+                    <Button onClick={addToCartHandler} text="Добавить в корзину" />
+                  </>
+                ) : (
+                  <>
+                    {/* потом это */}
+                    <div className="card_buttons_div">
+                      <Button onClick={minusHandler} text="-" />
+                      <Input onChange={inputHandler} value={count.toString()} type="text" />
+                      <Button onClick={plusHandler} text="+" />
+                    </div>
+                  </>
+                )}
               </>
             ) : (
               <>
-                {/* потом это */}
                 <div className="card_buttons_div">
                   <Button onClick={minusHandler} text="-" />
                   <Input onChange={inputHandler} value={count.toString()} type="text" />

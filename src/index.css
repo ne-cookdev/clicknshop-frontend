@@ -1,14 +1,11 @@
 @import "./components/Button/Button.css";
 @import "./components/Card/Card.css";
-@import "./components/CardLesson/CardLesson.css";
-@import "./components/CardTheme/CardTheme.css";
-@import "./components/Icons/CheckMarkDown.css";
 @import "./components/Input/Input.css";
 @import "./components/Label/Label.css";
 @import "./components/LogoutHeader/LogoutHeader.css";
 @import "./components/Tag/Tag.css";
-@import "./components/Tip/Tip.css";
 @import "./components/Title/Title.css";
+@import "./components/CartCard/CartCard.css";
 @import "./layouts/layouts_styles/Authpages.css";
 @import "./layouts/layouts_styles/Loginpage.css";
 @import "./layouts/layouts_styles/NoFoundpage.css";

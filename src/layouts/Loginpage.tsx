@@ -40,7 +40,7 @@ export const Loginpage = () => {
       const role = returned?.role ?? null;
       localStorage.setItem("role", role);
       if (role == "admin" || role == "staff") {
-        navigate("/orders");
+        navigate("/catalog");
       } else {
         navigate("/catalog");
       }

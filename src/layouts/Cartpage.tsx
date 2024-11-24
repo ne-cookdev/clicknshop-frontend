@@ -2,40 +2,129 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { usePlaceOrderMutation } from "../features/api/lessonsApi";
+import { usePlaceOrderMutation } from "../features/api/api";
 
-import { HistoryCard } from "../components/HistoryCard/HistoryCard";
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
+import { CartCard } from "../components/CartCard/CartCard";
+import { Label } from "../components/Label/Label";
+import { Button } from "../components/Button/Button";
 
-import { HistoryItem } from "../entities/catalog/model/types";
+import { CartItem } from "../entities/catalog/model/types";
+
+interface OrderItem {
+  id: number;
+  quantity: number;
+}
 
 export const Cartpage = () => {
+  // нужно для редиректа
+  const navigate = useNavigate();
+
   // определяем роль пользователя
   const role = localStorage.getItem("role");
 
-  const data = [
-    {
-      name: "Футбольный мяч",
-      image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
-      price: 1237,
-      quantity: 5,
-    },
-    {
-      name: "Футбольный мяч",
-      image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
-      price: 1237,
-      quantity: 5,
-    },
-    {
-      name: "Футбольный мяч",
-      image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
-      price: 1237,
-      quantity: 5,
-    },
-  ];
+  useEffect(() => {
+    if (role === "admin" || role === "staff") {
+      navigate("/");
+    }
+  }, [role, navigate]);
 
-  // нужно для редиректа
-  const navigate = useNavigate();
+  const [data, setData] = useState<CartItem[]>([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+
+  // Функция для загрузки данных из localStorage
+  const loadData = () => {
+    const orderData = JSON.parse(localStorage.getItem("order") ?? "{}");
+    const itemsArray = Object.keys(orderData).map((key) => ({
+      id: key,
+      ...orderData[key],
+    }));
+    setData(itemsArray);
+  };
+
+  // Функция для пересчета итоговой стоимости
+  const calculateTotalPrice = () => {
+    const total = data.reduce((sum, item) => sum + item.price * item.count, 0);
+    setTotalPrice(total);
+  };
+
+  // Функция для пересчета итоговой стоимости
+  const calculateTotalCount = () => {
+    const total = data.reduce((sum, item) => sum + item.count, 0);
+    setTotalCount(total);
+  };
+
+  // Используйте useEffect для загрузки данных и пересчета общей стоимости
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    calculateTotalPrice();
+    calculateTotalCount();
+  }, [data]);
+
+  // Функция для обновления localStorage и перезагрузки данных
+  const updateLocalStorage = (id: number, newCount: number) => {
+    // Обновляем данные в localStorage
+    const orderData = JSON.parse(localStorage.getItem("order") ?? "{}");
+    orderData[id].count = newCount;
+    localStorage.setItem("order", JSON.stringify(orderData));
+
+    // Перезагружаем данные из localStorage
+    loadData();
+  };
+
+  // Функция для удаления товара из localStorage
+  const deleteItem = (id: number) => {
+    // Обновляем данные в localStorage
+    const orderData = JSON.parse(localStorage.getItem("order") ?? "{}");
+
+    // Удаляем товар с id из orderData
+    if (orderData[id]) {
+      delete orderData[id]; // Удаляем элемент с указанным id
+    }
+
+    localStorage.setItem("order", JSON.stringify(orderData));
+
+    // Перезагружаем данные из localStorage
+    loadData();
+  };
+
+  // Получаем хук для мутации
+  const [placeOrder, { isLoading, isError, isSuccess }] = usePlaceOrderMutation();
+
+  const [isShowError, setIsShowError] = useState(false);
+
+  const handleOrderSubmit = async () => {
+    const orderData = JSON.parse(localStorage.getItem("order") ?? "{}");
+    const itemsArray = Object.keys(orderData).map((key) => ({
+      id: key,
+      ...orderData[key],
+    }));
+
+    let order: OrderItem[] = [];
+    console.log(itemsArray);
+
+    itemsArray.forEach((i: CartItem) => {
+      const item = {
+        id: i.id,
+        quantity: i.count,
+      };
+      order.push(item);
+    });
+
+    try {
+      const response = await placeOrder({ order: order, address: address }).unwrap(); // unwrap для получения данных или ошибки
+      console.log("Order submitted successfully:", response);
+      localStorage.setItem("order", "{}");
+      loadData();
+    } catch (error) {
+      console.error("Error submitting order:", error);
+      setIsShowError(true);
+    }
+  };
 
   // запрос на выход
   const [logoutUser, { isLoading: isLogoutLoading }] = useLogoutUserMutation();
@@ -79,39 +168,66 @@ export const Cartpage = () => {
     fetchLessons();
   }, []);*/
 
-  if (role != "admin" && role != "staff") {
-    /*if (isSuccess) {*/
-    if (data.length === 0) {
-      return (
-        <main className="body_404">
-          <div className="h-dvh flex items-center justify-center flex-col">
-            <img src="/images/robot_404.png" className="mb-6" />
-            <p className="text-starkit-electric font-bold text-7xl text-center">404</p>
-            <p className="text-black font-bold text-2xl text-center mb-5">Вы пока ничего не заказали</p>
+  const [address, setAddress] = useState("");
+
+  const handleChangeAddress = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setAddress(event.target.value);
+  };
+
+  /*if (isSuccess) {*/
+  if (data.length == 0) {
+    return (
+      <main className="body_404">
+        <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
+        <div className="py-24 flex items-center justify-center flex-col">
+          <img src="/images/robot_404.png" className="mb-6" />
+          <p className="text-black font-bold text-2xl text-center mb-5">Вы пока ничего не выбрали</p>
+          <a className="w-full flex justify-center" href="/catalog">
+            <Button text="Каталог" className="w-[250px]" />
+          </a>
+        </div>
+      </main>
+    );
+  } else {
+    return (
+      <>
+        <main className="bg-starkit-magnolia">
+          <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
+          <div className="grid grid-cols-[3fr_1fr] px-32 justify-center items-start gap-x-6">
+            <div className="w-full flex flex-col gap-y-7">
+              {data.map((item: CartItem) => (
+                <CartCard onDeleteItem={deleteItem} onUpdateCount={updateLocalStorage} key={item.id} id={item.id} name={item.name} image={item.image_ref} price={item.price} quantity={item.quantity} count={item.count} />
+              ))}
+            </div>
+            <div className="w-full py-[30px] px-[20px] flex flex-col bg-white rounded-[40px]">
+              <h1 className="w-full text-center text-[28px] font-bold text-starkit-electric">Заказ</h1>
+              <Label text="Адрес" />
+              <textarea value={address} onChange={handleChangeAddress} className="w-full h-[105px] p-3.5 mb-6 border border-starkit-lavender focus:outline-starkit-indigo text-base rounded-[14px]" placeholder="Введите адрес..." />
+              <p className="text-sm font-normal text-black mb-2.5">Товары: {totalCount} шт.</p>
+              <div className="flex flex-row mb-6 justify-between items-center">
+                <p className="text-[28px] font-bold text-starkit-electric">Итого:</p>
+                <p className="text-[28px] font-bold text-starkit-electric">{totalPrice} ₽</p>
+              </div>
+              <Button onClick={handleOrderSubmit} text="Оформить заказ" />
+            </div>
           </div>
-        </main>
-      );
-    } else {
-      return (
-        <>
-          <main className="bg-starkit-magnolia">
-            <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-            <div className="flex justify-center flex-col items-center">
-              <div>поиск</div>
-              <div className="grid grid-cols-4 gap-y-12 gap-x-16">
-                {data.map((item: HistoryItem) => (
-                  <HistoryCard name={item.name} image={item.image_ref} price={item.price} quantity={item.quantity} />
-                ))}
+          {isShowError && (
+            <div className="h-dvh fixed inset-0 bg-black/50 bg-none flex justify-center items-center z-[8]">
+              <div className="w-[425px] px-6 pb-6 flex flex-col justify-center items-center bg-white rounded-[40px]">
+                <img src="/images/robot_404.png" className="mt-[-128px] mb-8" />
+                <h1 className="mb-4 text-center text-starkit-electric text-2xl font-bold">Извините</h1>
+                <span className="mb-9 text-center text-black text-base font-medium">
+                  Заказ не получилось оформить. Уже начали исправлять данную проблему.<span className="text-starkit-electric"> Свяжемся с вами в ближайшее время.</span>
+                </span>
+                <Button onClick={() => setIsShowError(false)} text="Понятно" className="mb-5" />
               </div>
             </div>
-          </main>
-        </>
-      );
-    }
-    /*} else {
+          )}
+        </main>
+      </>
+    );
+  }
+  /*} else {
     return null;
     }*/
-  } else {
-    navigate("/");
-  }
 };

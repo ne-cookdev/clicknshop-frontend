@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useGetItemsQuery } from "../features/api/lessonsApi";
+import { useGetItemsQuery } from "../features/api/api";
 
 import { Card } from "../components/Card/Card";
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
@@ -10,14 +10,21 @@ import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Item } from "../entities/catalog/model/types";
 
 export const Catalogpage = () => {
-  // запрос данных с бэка
-  //const { data, isLoading: isGettingCourses, isSuccess, isError, error, refetch } = useGetItemsQuery();
+  // нужно для редиректа
+  const navigate = useNavigate();
 
   // определяем роль пользователя
   const role = localStorage.getItem("role");
 
+  // запрос данных с бэка
+  //const { data, isLoading: isGettingCourses, isSuccess, isError, error, refetch } = useGetItemsQuery();
+
+  // Извлекаем данные из localStorage
+  const orderData = JSON.parse(localStorage.getItem("order") ?? "{}");
+
   const data = [
     {
+      id: 1,
       category: "Спорт",
       name: "Футбольный мяч",
       description: "Профессиональный матчевый футбольный мяч Лига чемпионов – официальный 5 размер и вес UEFA : длина окружности 68,6 см вес 450 г. Подходит для соревнований профессионалов и любительских тренировок.",
@@ -26,14 +33,15 @@ export const Catalogpage = () => {
       quantity: 5,
     },
     {
+      id: 2,
       category: "Спорт",
       name: "Футбольный мяч",
       description: "Профессиональный матчевый футбольный мяч Лига чемпионов – официальный 5 размер и вес UEFA : длина окружности 68,6 см вес 450 г. Подходит для соревнований профессионалов и любительских тренировок.",
-      image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
       price: 1237,
       quantity: 5,
     },
     {
+      id: 3,
       category: "Спорт",
       name: "Футбольный мяч",
       description: "Профессиональный матчевый футбольный мяч Лига чемпионов – официальный 5 размер и вес UEFA : длина окружности 68,6 см вес 450 г. Подходит для соревнований профессионалов и любительских тренировок.",
@@ -42,9 +50,6 @@ export const Catalogpage = () => {
       quantity: 5,
     },
   ];
-
-  // нужно для редиректа
-  const navigate = useNavigate();
 
   // запрос на выход
   const [logoutUser, { isLoading: isLogoutLoading }] = useLogoutUserMutation();
@@ -84,18 +89,19 @@ export const Catalogpage = () => {
       console.error(error);
     }
   };
+
   useEffect(() => {
     fetchLessons();
-  }, []);*/
+  }, []);
 
-  /*if (isSuccess) {*/
-  if (data.length === 0) {
+  if (isSuccess) {*/
+  if (data.length == 0) {
     return (
       <main className="body_404">
-        <div className="h-dvh flex items-center justify-center flex-col">
+        <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
+        <div className="py-32 flex items-center justify-center flex-col">
           <img src="/images/robot_404.png" className="mb-6" />
-          <p className="text-starkit-electric font-bold text-7xl text-center">404</p>
-          <p className="text-black font-bold text-2xl text-center mb-5">Пока нет доступных товаров</p>
+          <p className="text-black font-bold text-2xl text-center mb-5">Все раскупили, приходите позже</p>
         </div>
       </main>
     );
@@ -108,7 +114,7 @@ export const Catalogpage = () => {
             <div>поиск</div>
             <div className="grid grid-cols-4 gap-y-12 gap-x-16">
               {data.map((item: Item) => (
-                <Card key={item.id} role={role ? role : "user"} category={item.category} name={item.name} description={item.description} image={item.image_ref} price={item.price} quantity={item.quantity} />
+                <Card order={orderData} key={item.id} id={item.id} role={role ? role : "user"} category={item.category} name={item.name} description={item.description} image={item.image_ref} price={item.price} quantity={item.quantity} />
               ))}
             </div>
           </div>

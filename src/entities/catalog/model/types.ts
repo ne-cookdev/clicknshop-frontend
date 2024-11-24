@@ -15,3 +15,12 @@ export interface HistoryItem {
   price: number;
   quantity: number;
 }
+
+export interface CartItem {
+  id: number;
+  name: string;
+  image_ref?: string;
+  price: number;
+  quantity: number;
+  count: number;
+}

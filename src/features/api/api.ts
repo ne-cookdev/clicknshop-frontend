@@ -3,8 +3,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Item } from "../../entities/catalog/model/types";
 import { HistoryItem } from "../../entities/catalog/model/types";
 
-export const lessonsApi = createApi({
-  reducerPath: "lessonsApi",
+export const api = createApi({
+  reducerPath: "api",
   keepUnusedDataFor: 10,
   baseQuery: fetchBaseQuery({
     // @ts-ignore
@@ -28,10 +28,10 @@ export const lessonsApi = createApi({
       query: (args) => ({
         url: "/order",
         method: "POST",
-        body: { order: args.order },
+        body: { order: args.order, address: args.address },
       }),
     }),
   }),
 });
 
-export const { useGetItemsQuery, useGetHistoryQuery, usePlaceOrderMutation } = lessonsApi;
+export const { useGetItemsQuery, useGetHistoryQuery, usePlaceOrderMutation } = api;

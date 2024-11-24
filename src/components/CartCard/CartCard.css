@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.gradient-text {
+  background-color: #1c24aa;
+  background-image: linear-gradient(90deg, #1c24aa, #b7b8fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@layer components {
+  .cartcard_background {
+    @apply w-full px-[30px] py-6 flex flex-row justify-between items-center bg-white rounded-[40px];
+  }
+
+  .cartcard_imgtext_div {
+    @apply flex flex-row gap-x-4 items-center;
+  }
+
+  .cartcard_img {
+    @apply w-[270px] h-[200px] rounded-[40px];
+  }
+
+  .cartcard_text_div {
+    @apply flex flex-col justify-start;
+  }
+
+  .cartcard_name {
+    @apply mb-4 text-[28px] font-bold gradient-text;
+  }
+
+  .cartcard_quantity {
+    @apply text-sm font-normal text-black;
+  }
+
+  .cartcard_buttons_div {
+    @apply grid grid-cols-[1fr_3fr_1fr] gap-x-3.5;
+  }
+
+  .cartcard_price {
+    @apply text-[28px] font-bold text-starkit-electric;
+  }
+}
