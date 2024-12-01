@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { Item } from "../../entities/catalog/model/types";
+import { Category } from "../../entities/catalog/model/types";
 import { HistoryItem } from "../../entities/catalog/model/types";
 
 export const api = createApi({
@@ -18,11 +19,11 @@ export const api = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getItems: builder.query<Item[], void>({
-      query: () => "/catalog",
-    }),
     getHistory: builder.query<HistoryItem[], void>({
-      query: () => "/history",
+      query: () => ({
+        url: `/history`,
+        method: "GET",
+      }),
     }),
     placeOrder: builder.mutation({
       query: (args) => ({
@@ -31,7 +32,63 @@ export const api = createApi({
         body: { order: args.order, address: args.address },
       }),
     }),
+    /* товары */
+    getItems: builder.query<Item[], void>({
+      query: () => ({
+        url: `/product`,
+        method: "GET",
+      }),
+    }),
+    createItem: builder.mutation({
+      query: (args) => ({
+        url: `/product`,
+        method: "POST",
+        body: { name: args.name },
+      }),
+    }),
+    editItem: builder.mutation({
+      query: (args) => ({
+        url: `/product/${args.id}`,
+        method: "PATCH",
+        body: { id: args.id, name: args.name },
+      }),
+    }),
+    deleteItem: builder.mutation({
+      query: (args) => ({
+        url: `/product/${args.id}`,
+        method: "DELETE",
+        body: { id: args.id },
+      }),
+    }),
+    /* категории */
+    getCategories: builder.query<Category[], void>({
+      query: () => ({
+        url: `/category`,
+        method: "GET",
+      }),
+    }),
+    createCategory: builder.mutation({
+      query: (args) => ({
+        url: `/category`,
+        method: "POST",
+        body: { name: args.name },
+      }),
+    }),
+    editCategory: builder.mutation({
+      query: (args) => ({
+        url: `/category/${args.id}`,
+        method: "PATCH",
+        body: { id: args.id, name: args.name },
+      }),
+    }),
+    deleteCategory: builder.mutation({
+      query: (args) => ({
+        url: `/category/${args.id}`,
+        method: "DELETE",
+        body: { id: args.id },
+      }),
+    }),
   }),
 });
 
-export const { useGetItemsQuery, useGetHistoryQuery, usePlaceOrderMutation } = api;
+export const { useGetHistoryQuery, usePlaceOrderMutation, useGetItemsQuery, useCreateItemMutation, useEditItemMutation, useDeleteItemMutation, useGetCategoriesQuery, useCreateCategoryMutation, useEditCategoryMutation, useDeleteCategoryMutation } = api;

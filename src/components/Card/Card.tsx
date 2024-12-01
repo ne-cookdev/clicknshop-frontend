@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useDeleteItemMutation } from "../../features/api/api";
 
 import { Tag } from "../Tag/Tag";
 import { EditIcon } from "../Icons/EditIcon";
@@ -97,6 +100,23 @@ export const Card: React.FC<CardProps> = (props) => {
     }
   };
 
+  // нужно для редиректа
+  const navigate = useNavigate();
+
+  // Получаем хук для мутации
+  const [deleteItem, { isLoading, isError, isSuccess }] = useDeleteItemMutation();
+
+  // обработчик иконки удаления категории
+  const deleteHandler = async () => {
+    try {
+      const response = await deleteItem({ id: props.id }).unwrap();
+      console.log(`Delete item "${props.name}" successfully:`, response);
+      navigate("/catalog");
+    } catch (error) {
+      console.error("Item wasn't delete:", error);
+    }
+  };
+
   return (
     <div className="card_background">
       <div className="card_img_div">
@@ -119,12 +139,12 @@ export const Card: React.FC<CardProps> = (props) => {
           <p className="card_price">{props.price} ₽</p>
         </div>
 
-        {props.role == "admin" || props.role == "staff" ? (
+        {props.role == "admin" || props.role == "superuser" ? (
           <div className="card_icons_div">
-            <a href="/editcard">
+            <a href={`/item/edit/${props.id}`}>
               <EditIcon className="card_editicon" />
             </a>
-            <TrashIcon className="card_trashicon" />
+            <TrashIcon onClick={deleteHandler} className="card_trashicon" />
           </div>
         ) : (
           <>

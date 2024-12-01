@@ -6,6 +6,7 @@ import { useGetItemsQuery } from "../features/api/api";
 
 import { Card } from "../components/Card/Card";
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
+import { Button } from "../components/Button/Button";
 
 import { Item } from "../entities/catalog/model/types";
 
@@ -42,6 +43,15 @@ export const Catalogpage = () => {
     },
     {
       id: 3,
+      category: "Спорт",
+      name: "Футбольный мяч",
+      description: "Профессиональный матчевый футбольный мяч Лига чемпионов – официальный 5 размер и вес UEFA : длина окружности 68,6 см вес 450 г. Подходит для соревнований профессионалов и любительских тренировок.",
+      image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
+      price: 1237,
+      quantity: 5,
+    },
+    {
+      id: 4,
       category: "Спорт",
       name: "Футбольный мяч",
       description: "Профессиональный матчевый футбольный мяч Лига чемпионов – официальный 5 размер и вес UEFA : длина окружности 68,6 см вес 450 г. Подходит для соревнований профессионалов и любительских тренировок.",
@@ -110,7 +120,33 @@ export const Catalogpage = () => {
       <>
         <main className="bg-starkit-magnolia">
           <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-          <div className="flex justify-center flex-col items-center">
+          <div className="grid auto-cols-auto gap-y-5 justify-center items-center">
+            {(role == "admin" || role == "superuser") && (
+              <div className="flex flex-row justify-between items-center">
+                <div className="flex flex-row gap-x-5">
+                  <a href="/categories">
+                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Категории</h2>
+                  </a>
+                  <a href="/catalog">
+                    <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Товары</h2>
+                  </a>
+                  <a href="/orders">
+                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Заказы</h2>
+                  </a>
+                  <a href="/deliveries">
+                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставки</h2>
+                  </a>
+                  <a href="/warehouses">
+                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
+                  </a>
+                </div>
+                <div>
+                  <a href="/catalog/create">
+                    <Button text="Новый товар" className="px-14" />
+                  </a>
+                </div>
+              </div>
+            )}
             <div>поиск</div>
             <div className="grid grid-cols-4 gap-y-12 gap-x-16">
               {data.map((item: Item) => (

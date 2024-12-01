@@ -39,7 +39,7 @@ export const Loginpage = () => {
       localStorage.setItem("access", accesstoken);
       const role = returned?.role ?? null;
       localStorage.setItem("role", role);
-      if (role == "admin" || role == "staff") {
+      if (role == "admin" || role == "superuser") {
         navigate("/catalog");
       } else {
         navigate("/catalog");

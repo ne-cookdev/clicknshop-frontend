@@ -15,7 +15,7 @@ export const LogoutHeader: React.FC<LogoutHeaderProps> = (props) => {
     <>
       <div className="logoutheader_div">
         <div className="flex flex-row gap-x-6">
-          {props.role != "admin" && props.role != "staff" && (
+          {props.role != "admin" && props.role != "superuser" && (
             <>
               <a href="/history">
                 <HistoryItemsIcon className="logoutheader_icon" />

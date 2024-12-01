@@ -24,3 +24,8 @@ export interface CartItem {
   quantity: number;
   count: number;
 }
+
+export interface Category {
+  id: number;
+  name: string;
+}

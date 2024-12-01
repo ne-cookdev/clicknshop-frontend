@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useGetHistoryQuery } from "../features/api/api";
+import { useGetCategoriesQuery } from "../features/api/api";
 
-import { HistoryCard } from "../components/HistoryCard/HistoryCard";
+import { CategoryCard } from "../components/CategoryCard/CategoryCard";
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Button } from "../components/Button/Button";
 
-import { HistoryItem } from "../entities/catalog/model/types";
+import { Category } from "../entities/catalog/model/types";
 
-export const Historypage = () => {
+export const Categoriespage = () => {
   // нужно для редиректа
   const navigate = useNavigate();
 
@@ -18,38 +18,38 @@ export const Historypage = () => {
   const role = localStorage.getItem("role");
 
   useEffect(() => {
-    if (role === "admin" || role === "superuser") {
+    if (role !== "admin" && role !== "superuser") {
       navigate("/");
     }
   }, [role, navigate]);
 
   // запрос данных с бэка
-  //const { data, isLoading: isGettingCourses, isSuccess, isError, error, refetch } = useGetHistoryQuery();
-
-  // Извлекаем данные из localStorage
-  const orderData = JSON.parse(localStorage.getItem("order") ?? "{}");
+  //const { data, isLoading: isGettingCourses, isSuccess, isError, error, refetch } = useGetCategoriesQuery();
 
   const data = [
     {
+      id: 1,
+      name: "Спорт",
+    },
+    {
+      id: 2,
+      name: "Фрукты",
+    },
+    {
+      id: 3,
+      name: "Еда",
+    },
+    {
       id: 4,
-      name: "Бананы",
-      image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
-      price: 1,
-      quantity: 5,
+      name: "Дом",
     },
     {
       id: 5,
-      name: "Бананы",
-      image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
-      price: 1,
-      quantity: 5,
+      name: "Электроника",
     },
     {
       id: 6,
-      name: "Бананы",
-      image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
-      price: 1,
-      quantity: 5,
+      name: "Ароматерапия",
     },
   ];
 
@@ -101,12 +101,9 @@ export const Historypage = () => {
     return (
       <main className="body_404">
         <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-        <div className="py-24 flex items-center justify-center flex-col">
+        <div className="py-32 flex items-center justify-center flex-col">
           <img src="/images/robot_404.png" className="mb-6" />
-          <p className="text-black font-bold text-2xl text-center mb-5">Вы пока ничего не заказали</p>
-          <a className="w-full flex justify-center" href="/catalog">
-            <Button text="Каталог" className="w-[250px]" />
-          </a>
+          <p className="text-black font-bold text-2xl text-center mb-5">Пока нет категорий</p>
         </div>
       </main>
     );
@@ -115,11 +112,35 @@ export const Historypage = () => {
       <>
         <main className="bg-starkit-magnolia">
           <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-          <div className="flex justify-center flex-col items-center">
+          <div className="grid auto-cols-auto gap-y-5 justify-center items-center">
+            <div className="flex flex-row justify-between items-center">
+              <div className="flex flex-row gap-x-5">
+                <a href="/categories">
+                  <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Категории</h2>
+                </a>
+                <a href="/catalog">
+                  <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Товары</h2>
+                </a>
+                <a href="/orders">
+                  <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Заказы</h2>
+                </a>
+                <a href="/deliveries">
+                  <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставки</h2>
+                </a>
+                <a href="/warehouses">
+                  <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
+                </a>
+              </div>
+              <div>
+                <a href="/category/create">
+                  <Button text="Новая категория" className="px-14" />
+                </a>
+              </div>
+            </div>
             <div>поиск</div>
-            <div className="grid grid-cols-4 gap-y-12 gap-x-16">
-              {data.map((item: HistoryItem) => (
-                <HistoryCard order={orderData} key={item.id} id={item.id} name={item.name} image={item.image_ref} price={item.price} quantity={item.quantity} />
+            <div className="grid grid-cols-6 gap-y-[26px] gap-x-[26px]">
+              {data.map((category: Category) => (
+                <CategoryCard key={category.id} id={category.id} name={category.name} />
               ))}
             </div>
           </div>

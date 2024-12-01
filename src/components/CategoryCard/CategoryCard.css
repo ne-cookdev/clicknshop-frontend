@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .categorycard_background {
+    @apply w-full py-[30px] px-6 gap-y-5 flex flex-col justify-center items-center bg-white rounded-[40px];
+  }
+  .categorycard_name {
+    @apply w-full text-center text-[28px] font-bold text-starkit-electric;
+  }
+
+  .categorycard_icons_div {
+    @apply flex flex-row gap-x-7 items-center justify-center;
+  }
+
+  .categorycard_editicon {
+    @apply w-[40px] h-[40px] fill-starkit-lavender;
+  }
+
+  .categorycard_trashicon {
+    @apply w-[30px] h-[40px] fill-starkit-lavender;
+  }
+}

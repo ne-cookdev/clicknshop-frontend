@@ -24,7 +24,7 @@ export const Cartpage = () => {
   const role = localStorage.getItem("role");
 
   useEffect(() => {
-    if (role === "admin" || role === "staff") {
+    if (role === "admin" || role === "superuser") {
       navigate("/");
     }
   }, [role, navigate]);
@@ -116,7 +116,7 @@ export const Cartpage = () => {
     });
 
     try {
-      const response = await placeOrder({ order: order, address: address }).unwrap(); // unwrap для получения данных или ошибки
+      const response = await placeOrder({ order: order, address: address }).unwrap();
       console.log("Order submitted successfully:", response);
       localStorage.setItem("order", "{}");
       loadData();
