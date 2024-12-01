@@ -127,6 +127,13 @@ export const CategoryEditpage = () => {
     }
   };
 
+  useEffect(() => {
+    if (!isSuccessCategories) {
+      return;
+    }
+    setNameCategory(getNameById(categoryIdNumber) || "");
+  }, [isSuccessCategories]);
+
   const [editCategory, { isLoading, isError, isSuccess }] = useEditCategoryMutation();
   const [isShowError, setIsShowError] = useState(false);
 
