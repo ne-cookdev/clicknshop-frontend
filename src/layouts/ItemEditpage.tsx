@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useCreateItemMutation, useGetCategoriesQuery } from "../features/api/api";
+import { useEditItemMutation, useGetCategoriesQuery, useGetItemsQuery } from "../features/api/api";
 
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Label } from "../components/Label/Label";
@@ -10,7 +11,11 @@ import { Input } from "../components/Input/Input";
 import { ErrorIcon } from "../components/Icons/ErrorIcon";
 import { Button } from "../components/Button/Button";
 
-export const ItemCreatepage = () => {
+type ItemParams = {
+  itemId: string;
+};
+
+export const ItemEditpage = () => {
   // нужно для редиректа
   const navigate = useNavigate();
 
@@ -22,6 +27,9 @@ export const ItemCreatepage = () => {
       navigate("/");
     }
   }, [role, navigate]);
+
+  const { itemId } = useParams<ItemParams>(); // id товара (строка)
+  const itemIdNumber = parseInt(itemId ?? "", 10); // id товара (число)
 
   // запрос на выход
   const [logoutUser, { isLoading: isLogoutLoading }] = useLogoutUserMutation();
@@ -61,19 +69,32 @@ export const ItemCreatepage = () => {
       console.error(error);
     }
   };
-
   useEffect(() => {
     fetchLessons();
   }, []);
 
-  // запрос данных с бэка
-  const { data: categories, isLoading: isGettingCourses, isSuccess: isSuccessCategories, isError: isErrorCategories, error, refetch } = useGetCategoriesQuery();
-  const getIdByName = (name: string) => {
+  // запрос всех категорий
+  const { data: categories, isLoading: isGettingСategories, isSuccess: isSuccessCategories, isError: isErrorCategories, error: categoriesErr } = useGetCategoriesQuery();
+  // получение имени категории по id
+  const getNameOfCategoryById = (id: number) => {
+    const category = categories?.find((category) => category.id === id);
+    return category?.name;
+  };
+  const getIdByNameOfCategory = (name: string) => {
     const category = categories?.find((category) => category.name === name);
     return category?.id;
   };
 
-  const [nameCategory, setNameCategory] = useState<string>("");
+  // запрос всех товаров
+  const { data: items, isLoading: isGettingItems, isSuccess: isSuccessItems, isError: isErrorItems, error: itemsErr, refetch } = useGetItemsQuery();
+  // получение товара по id
+  const getItemById = (id: number) => {
+    const item = items?.find((item) => item.id === id);
+    return item;
+  };
+  console.log("item", getItemById(itemIdNumber));
+
+  const [nameCategory, setNameCategory] = useState<string>(getNameOfCategoryById(getItemById(itemIdNumber)?.category?.id || 1) || "");
   const [categoryMessage, setCategoryMessage] = useState<string>("");
   const inputCategoryHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -86,57 +107,71 @@ export const ItemCreatepage = () => {
     }
   };
 
-  const [imageRef, setImageRef] = useState<string>("");
+  const [imageRef, setImageRef] = useState<string>(getItemById(itemIdNumber)?.image_ref || "");
   const inputImageRefHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setImageRef(value);
   };
 
-  const [name, setName] = useState<string>("");
+  const [name, setName] = useState<string>(getItemById(itemIdNumber)?.name || "");
   const inputNameHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setName(value);
   };
 
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(getItemById(itemIdNumber)?.description || "");
   const handleChangeDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(event.target.value);
   };
 
-  const [weight, setWeight] = useState<string>("");
+  const [weight, setWeight] = useState<string>(getItemById(itemIdNumber)?.weight?.toString() || "");
   const inputWeightHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setWeight(value);
   };
 
-  const [price, setPrice] = useState<string>("");
+  const [price, setPrice] = useState<string>(getItemById(itemIdNumber)?.price?.toString() || "");
   const inputPriceHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setPrice(value);
   };
 
-  const [length, setLength] = useState<string>("");
+  const [length, setLength] = useState<string>(getItemById(itemIdNumber)?.length?.toString() || "");
   const inputLengthHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setLength(value);
   };
 
-  const [width, setWidth] = useState<string>("");
+  const [width, setWidth] = useState<string>(getItemById(itemIdNumber)?.width?.toString() || "");
   const inputWidthHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setWidth(value);
   };
 
-  const [height, setHeight] = useState<string>("");
+  const [height, setHeight] = useState<string>(getItemById(itemIdNumber)?.height?.toString() || "");
   const inputHeightHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setHeight(value);
   };
+  useEffect(() => {
+    if (!isSuccessItems || !isSuccessCategories) {
+      return;
+    }
+    setNameCategory(getNameOfCategoryById(getItemById(itemIdNumber)?.category?.id || 1) || "");
+    setImageRef(getItemById(itemIdNumber)?.image_ref || "");
+    setName(getItemById(itemIdNumber)?.name || "");
+    setDescription(getItemById(itemIdNumber)?.description || "");
+    setWeight(getItemById(itemIdNumber)?.weight?.toString() || "");
+    setPrice(getItemById(itemIdNumber)?.price?.toString() || "");
+    setLength(getItemById(itemIdNumber)?.length?.toString() || "");
+    setWidth(getItemById(itemIdNumber)?.width?.toString() || "");
+    setHeight(getItemById(itemIdNumber)?.height?.toString() || "");
+  }, [isSuccessItems, isSuccessCategories]);
 
-  const [createItem, { isLoading, isError, isSuccess }] = useCreateItemMutation();
+  const [editItem, { isLoading, isError, isSuccess }] = useEditItemMutation();
   const [isShowError, setIsShowError] = useState(false);
 
-  const createItemHandler = async () => {
+  const editItemHandler = async () => {
     if (categoryMessage != "") {
       return;
     }
@@ -145,11 +180,11 @@ export const ItemCreatepage = () => {
     }
 
     try {
-      const response = await createItem({ category_id: getIdByName(nameCategory) || 1, image_ref: imageRef, name: name, description: description, weight: weight, price: price, length: length, width: width, height: height }).unwrap();
-      console.log(`Create product "${name}" successfully:`, response);
+      const response = await editItem({ id: itemIdNumber, category_id: getIdByNameOfCategory(nameCategory) || 1, image_ref: imageRef, name: name, description: description, weight: weight, price: price, length: length, width: width, height: height }).unwrap();
+      console.log(`Edit product successfully:`, response);
       navigate("/catalog");
     } catch (error) {
-      console.error("Product wasn't create:", error);
+      console.error("Product wasn't edit:", error);
       setIsShowError(true);
     }
   };
@@ -161,7 +196,7 @@ export const ItemCreatepage = () => {
         <div className="mt-[-35px] flex justify-center items-center">
           <div className="w-[500px] px-6 py-7 pb-7 bg-white rounded-[40px]">
             <h3 className="w-full mb-5 text-3xl text-center font-bold">
-              Добавление <span className="text-starkit-electric">товара</span>
+              Редактирование <span className="text-starkit-electric">товара</span>
             </h3>
             <div className="mb-2">
               <Label text="Категория" />
@@ -229,7 +264,7 @@ export const ItemCreatepage = () => {
                 </div>
               </div>
             </div>
-            <Button onClick={createItemHandler} text="Готово" />
+            <Button onClick={editItemHandler} text="Готово" />
           </div>
         </div>
         {isShowError && (
@@ -238,7 +273,7 @@ export const ItemCreatepage = () => {
               <img src="/images/robot_404.png" className="mt-[-128px] mb-8" />
               <h1 className="mb-4 text-center text-starkit-electric text-2xl font-bold">Извините</h1>
               <span className="mb-9 text-center text-black text-base font-medium">
-                Товар не получилось создать.<span className="text-starkit-electric"> Уже начали исправлять данную проблему.</span>
+                Товар не получилось отредактировать.<span className="text-starkit-electric"> Уже начали исправлять данную проблему.</span>
               </span>
               <a href="/catalog" className="w-full">
                 <Button onClick={() => setIsShowError(false)} text="Понятно" />

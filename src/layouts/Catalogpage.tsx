@@ -149,7 +149,7 @@ export const Catalogpage = () => {
               )}
               <div className="grid grid-cols-4 gap-y-12 gap-x-16">
                 {data.map((item: Item) => (
-                  <Card order={orderData} key={item.id} id={item.id} role={role ? role : "user"} category={item.category.name} name={item.name} description={item.description} image={item.image_ref} price={item.price} quantity={item.all_quantity} />
+                  <Card order={orderData} key={item.id} id={item.id} role={role ? role : "user"} category={item.category?.name || ""} name={item?.name || ""} description={item?.description || ""} image={item?.image_ref || ""} price={item?.price || 0} quantity={item?.all_quantity || 0} />
                 ))}
               </div>
             </div>

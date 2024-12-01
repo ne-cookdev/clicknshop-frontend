@@ -3,7 +3,7 @@ import { Homepage } from "./layouts/Homepage";
 import { Loginpage } from "./layouts/Loginpage";
 import { Registerpage } from "./layouts/Registerpage";
 import { Catalogpage } from "./layouts/Catalogpage";
-//import { ItemEditpage } from "./layouts/ItemEditpage";
+import { ItemEditpage } from "./layouts/ItemEditpage";
 import { ItemCreatepage } from "./layouts/ItemCreatepage";
 import { Cartpage } from "./layouts/Cartpage";
 import { Historypage } from "./layouts/Historypage";
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
   {
     path: "/item",
     children: [
-      //{ path: "edit/:itemId", element: <ItemEditpage /> },
+      { path: "edit/:itemId", element: <ItemEditpage /> },
       { path: "create", element: <ItemCreatepage /> },
     ],
   },

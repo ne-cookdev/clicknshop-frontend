@@ -107,13 +107,13 @@ export const CategoryEditpage = () => {
     },
   ];*/
 
+  // получение имени категории по id
   const getNameById = (id: number) => {
     const category = categories?.find((category) => category.id === id);
     return category?.name;
   };
 
   const [nameCategory, setNameCategory] = useState<string>(getNameById(categoryIdNumber) || "");
-  console.log("nameCategory", getNameById(categoryIdNumber) || "");
   const [message, setMessage] = useState<string>("");
 
   const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,7 +143,7 @@ export const CategoryEditpage = () => {
 
     try {
       const response = await editCategory({ id: categoryIdNumber, name: nameCategory.charAt(0).toUpperCase() + nameCategory.slice(1).toLowerCase() }).unwrap();
-      console.log(`edit category successfully:`, response);
+      console.log(`Edit category successfully:`, response);
       navigate("/categories");
     } catch (error) {
       console.error("Category wasn't edit:", error);

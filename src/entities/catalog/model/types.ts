@@ -1,11 +1,15 @@
 export interface Item {
   id: number;
-  category: CategoryForProduct;
-  name: string;
-  description: string;
+  category?: CategoryForProduct;
+  name?: string;
+  description?: string;
   image_ref?: string;
-  price: number;
-  all_quantity: number;
+  price?: number;
+  all_quantity?: number;
+  height?: number;
+  length?: number;
+  weight?: number;
+  width?: number;
 }
 
 export interface OrdersforHistory {
