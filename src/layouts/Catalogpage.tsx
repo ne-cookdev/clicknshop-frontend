@@ -18,12 +18,12 @@ export const Catalogpage = () => {
   const role = localStorage.getItem("role");
 
   // запрос данных с бэка
-  //const { data, isLoading: isGettingCourses, isSuccess, isError, error, refetch } = useGetItemsQuery();
+  const { data, isLoading: isGettingCourses, isSuccess, isError, error, refetch } = useGetItemsQuery();
 
   // Извлекаем данные из localStorage
   const orderData = JSON.parse(localStorage.getItem("order") ?? "{}");
 
-  const data = [
+  /*const data = [
     {
       id: 1,
       category: "Спорт",
@@ -59,7 +59,7 @@ export const Catalogpage = () => {
       price: 1237,
       quantity: 5,
     },
-  ];
+  ];*/
 
   // запрос на выход
   const [logoutUser, { isLoading: isLogoutLoading }] = useLogoutUserMutation();
@@ -75,7 +75,7 @@ export const Catalogpage = () => {
   };
 
   //  обновления access токена при ошибке "не авторизован"
-  /*const [updateAccessToken] = useUpdateAccessTokenMutation();
+  const [updateAccessToken] = useUpdateAccessTokenMutation();
   const [isTokenRefreshing, setIsTokenRefreshing] = useState(false);
   const fetchLessons = async () => {
     try {
@@ -104,61 +104,60 @@ export const Catalogpage = () => {
     fetchLessons();
   }, []);
 
-  if (isSuccess) {*/
-  if (data.length == 0) {
-    return (
-      <main className="body_404">
-        <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-        <div className="py-32 flex items-center justify-center flex-col">
-          <img src="/images/robot_404.png" className="mb-6" />
-          <p className="text-black font-bold text-2xl text-center mb-5">Все раскупили, приходите позже</p>
-        </div>
-      </main>
-    );
-  } else {
-    return (
-      <>
-        <main className="bg-starkit-magnolia">
+  if (isSuccess) {
+    if (data.length == 0) {
+      return (
+        <main className="body_404">
           <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-          <div className="grid auto-cols-auto gap-y-5 justify-center items-center">
-            {(role == "admin" || role == "superuser") && (
-              <div className="flex flex-row justify-between items-center">
-                <div className="flex flex-row gap-x-5">
-                  <a href="/categories">
-                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Категории</h2>
-                  </a>
-                  <a href="/catalog">
-                    <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Товары</h2>
-                  </a>
-                  <a href="/orders">
-                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Заказы</h2>
-                  </a>
-                  <a href="/deliveries">
-                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставки</h2>
-                  </a>
-                  <a href="/warehouses">
-                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
-                  </a>
-                </div>
-                <div>
-                  <a href="/catalog/create">
-                    <Button text="Новый товар" className="px-14" />
-                  </a>
-                </div>
-              </div>
-            )}
-            <div>поиск</div>
-            <div className="grid grid-cols-4 gap-y-12 gap-x-16">
-              {data.map((item: Item) => (
-                <Card order={orderData} key={item.id} id={item.id} role={role ? role : "user"} category={item.category} name={item.name} description={item.description} image={item.image_ref} price={item.price} quantity={item.quantity} />
-              ))}
-            </div>
+          <div className="py-32 flex items-center justify-center flex-col">
+            <img src="/images/robot_404.png" className="mb-6" />
+            <p className="text-black font-bold text-2xl text-center mb-5">Все раскупили, приходите позже</p>
           </div>
         </main>
-      </>
-    );
-  }
-  /*} else {
+      );
+    } else {
+      return (
+        <>
+          <main className="bg-starkit-magnolia">
+            <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
+            <div className="grid auto-cols-auto gap-y-5 justify-center items-center">
+              {(role == "admin" || role == "superuser") && (
+                <div className="flex flex-row justify-between items-center">
+                  <div className="flex flex-row gap-x-5">
+                    <a href="/categories">
+                      <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Категории</h2>
+                    </a>
+                    <a href="/catalog">
+                      <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Товары</h2>
+                    </a>
+                    <a href="/orders">
+                      <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Заказы</h2>
+                    </a>
+                    <a href="/deliveries">
+                      <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставки</h2>
+                    </a>
+                    <a href="/warehouses">
+                      <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
+                    </a>
+                  </div>
+                  <div>
+                    <a href="/item/create">
+                      <Button text="Новый товар" className="px-14" />
+                    </a>
+                  </div>
+                </div>
+              )}
+              <div className="grid grid-cols-4 gap-y-12 gap-x-16">
+                {data.map((item: Item) => (
+                  <Card order={orderData} key={item.id} id={item.id} role={role ? role : "user"} category={item.category.name} name={item.name} description={item.description} image={item.image_ref} price={item.price} quantity={item.all_quantity} />
+                ))}
+              </div>
+            </div>
+          </main>
+        </>
+      );
+    }
+  } else {
     return null;
-  }*/
+  }
 };

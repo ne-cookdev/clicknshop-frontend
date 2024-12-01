@@ -2,10 +2,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { Item } from "../../entities/catalog/model/types";
 import { Category } from "../../entities/catalog/model/types";
-import { HistoryItem } from "../../entities/catalog/model/types";
+import { OrdersforHistory } from "../../entities/catalog/model/types";
 
 export const api = createApi({
-  reducerPath: "api",
+  reducerPath: "apiTwo",
   keepUnusedDataFor: 10,
   baseQuery: fetchBaseQuery({
     // @ts-ignore
@@ -19,43 +19,43 @@ export const api = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getHistory: builder.query<HistoryItem[], void>({
+    getHistory: builder.query<OrdersforHistory[], void>({
       query: () => ({
-        url: `/history`,
+        url: `/orders`,
         method: "GET",
       }),
     }),
     placeOrder: builder.mutation({
       query: (args) => ({
-        url: "/order",
+        url: "/orders/",
         method: "POST",
-        body: { order: args.order, address: args.address },
+        body: { order_details: args.order_details, address: args.address },
       }),
     }),
     /* товары */
     getItems: builder.query<Item[], void>({
       query: () => ({
-        url: `/product`,
+        url: `/products`,
         method: "GET",
       }),
     }),
     createItem: builder.mutation({
       query: (args) => ({
-        url: `/product`,
+        url: `/products/`,
         method: "POST",
-        body: { name: args.name },
+        body: { category_id: args.category_id, image_ref: args.image, name: args.name, description: args.description, weight: args.weight, price: args.price, length: args.length, width: args.width, height: args.height },
       }),
     }),
     editItem: builder.mutation({
       query: (args) => ({
-        url: `/product/${args.id}`,
+        url: `/products/${args.id}/`,
         method: "PATCH",
         body: { id: args.id, name: args.name },
       }),
     }),
     deleteItem: builder.mutation({
       query: (args) => ({
-        url: `/product/${args.id}`,
+        url: `/products/${args.id}`,
         method: "DELETE",
         body: { id: args.id },
       }),
@@ -63,27 +63,27 @@ export const api = createApi({
     /* категории */
     getCategories: builder.query<Category[], void>({
       query: () => ({
-        url: `/category`,
+        url: `/categories`,
         method: "GET",
       }),
     }),
     createCategory: builder.mutation({
       query: (args) => ({
-        url: `/category`,
+        url: `/categories/`,
         method: "POST",
         body: { name: args.name },
       }),
     }),
     editCategory: builder.mutation({
       query: (args) => ({
-        url: `/category/${args.id}`,
+        url: `/categories/${args.id}/`,
         method: "PATCH",
         body: { id: args.id, name: args.name },
       }),
     }),
     deleteCategory: builder.mutation({
       query: (args) => ({
-        url: `/category/${args.id}`,
+        url: `/categories/${args.id}`,
         method: "DELETE",
         body: { id: args.id },
       }),

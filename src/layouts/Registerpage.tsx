@@ -34,12 +34,17 @@ export const Registerpage = () => {
   };
 
   /* запрос + ошибки с бэка */
+  const [registerUser, { isLoading, error }] = useRegisterUserMutation();
   const navigate = useNavigate();
   const handleSubmitProcess = async (data: RegisterData) => {
+    console.log("handleSubmitProcess");
     try {
       const email = data.emailValue;
+      console.log("email", email);
       const password = data.passwordValue;
-      const returned = await registerUser({ email, password }).unwrap();
+      console.log("password", password);
+      const returned = await registerUser({ email: email, password: password }).unwrap();
+      console.log("returned", returned);
       const refreshtoken = returned?.refresh ?? null;
       localStorage.setItem("refresh", refreshtoken);
       const accesstoken = returned?.access ?? null;
@@ -48,6 +53,8 @@ export const Registerpage = () => {
       localStorage.setItem("role", role);
       navigate("/auth/login");
     } catch (error) {
+      console.log("error", error);
+
       const errorResponse = error as AuthErrorResponse;
       if (errorResponse.data?.email) {
         setError("emailValue", { type: "custom", message: errorResponse.data?.email });
@@ -57,7 +64,6 @@ export const Registerpage = () => {
       }
     }
   };
-  const [registerUser, { isLoading: isCreating }] = useRegisterUserMutation();
 
   /* валидация формы */
   const {

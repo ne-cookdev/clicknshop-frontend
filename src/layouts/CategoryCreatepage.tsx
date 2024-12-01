@@ -37,7 +37,7 @@ export const CategoryCreatepage = () => {
   };
 
   //  обновления access токена при ошибке "не авторизован"
-  /*const [updateAccessToken] = useUpdateAccessTokenMutation();
+  const [updateAccessToken] = useUpdateAccessTokenMutation();
   const [isTokenRefreshing, setIsTokenRefreshing] = useState(false);
   const fetchLessons = async () => {
     try {
@@ -64,12 +64,12 @@ export const CategoryCreatepage = () => {
 
   useEffect(() => {
     fetchLessons();
-  }, []);*/
+  }, []);
 
   // запрос данных с бэка
-  //const { categories, isLoading: isGettingCourses, isSuccess, isError, error, refetch } = useGetCategoriesQuery();
+  const { data: categories, isLoading: isGettingCourses, isSuccess: isSuccessCategories, isError: isErrorCategories, error, refetch } = useGetCategoriesQuery();
 
-  const categories = [
+  /*const categories = [
     {
       id: 1,
       name: "Спорт",
@@ -94,7 +94,7 @@ export const CategoryCreatepage = () => {
       id: 6,
       name: "Ароматерапия",
     },
-  ];
+  ];*/
 
   const [nameCategory, setNameCategory] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -102,7 +102,7 @@ export const CategoryCreatepage = () => {
   const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setNameCategory(value);
-    const categoryExists = categories.some((category) => category.name.toLowerCase() === value.toLowerCase());
+    const categoryExists = categories?.some((category) => category.name.toLowerCase() === value.toLowerCase());
     if (categoryExists) {
       setMessage("Эта категория уже существует.");
     } else {

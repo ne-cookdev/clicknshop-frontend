@@ -12,7 +12,7 @@ import { Button } from "../components/Button/Button";
 import { CartItem } from "../entities/catalog/model/types";
 
 interface OrderItem {
-  id: number;
+  product_id: number;
   quantity: number;
 }
 
@@ -104,19 +104,19 @@ export const Cartpage = () => {
       ...orderData[key],
     }));
 
-    let order: OrderItem[] = [];
+    let order_details: OrderItem[] = [];
     console.log(itemsArray);
 
     itemsArray.forEach((i: CartItem) => {
       const item = {
-        id: i.id,
+        product_id: i.id,
         quantity: i.count,
       };
-      order.push(item);
+      order_details.push(item);
     });
 
     try {
-      const response = await placeOrder({ order: order, address: address }).unwrap();
+      const response = await placeOrder({ order_details: order_details, address: address }).unwrap();
       console.log("Order submitted successfully:", response);
       localStorage.setItem("order", "{}");
       loadData();
@@ -174,60 +174,60 @@ export const Cartpage = () => {
     setAddress(event.target.value);
   };
 
-  /*if (isSuccess) {*/
-  if (data.length == 0) {
-    return (
-      <main className="body_404">
-        <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-        <div className="py-24 flex items-center justify-center flex-col">
-          <img src="/images/robot_404.png" className="mb-6" />
-          <p className="text-black font-bold text-2xl text-center mb-5">Вы пока ничего не выбрали</p>
-          <a className="w-full flex justify-center" href="/catalog">
-            <Button text="Каталог" className="w-[250px]" />
-          </a>
-        </div>
-      </main>
-    );
-  } else {
-    return (
-      <>
-        <main className="bg-starkit-magnolia">
+  if (isSuccess) {
+    if (data.length == 0) {
+      return (
+        <main className="body_404">
           <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-          <div className="grid grid-cols-[3fr_1fr] px-32 justify-center items-start gap-x-6">
-            <div className="w-full flex flex-col gap-y-7">
-              {data.map((item: CartItem) => (
-                <CartCard onDeleteItem={deleteItem} onUpdateCount={updateLocalStorage} key={item.id} id={item.id} name={item.name} image={item.image_ref} price={item.price} quantity={item.quantity} count={item.count} />
-              ))}
-            </div>
-            <div className="w-full py-[30px] px-[20px] flex flex-col bg-white rounded-[40px]">
-              <h1 className="w-full text-center text-[28px] font-bold text-starkit-electric">Заказ</h1>
-              <Label text="Адрес" />
-              <textarea value={address} onChange={handleChangeAddress} className="w-full h-[105px] p-3.5 mb-6 border border-starkit-lavender focus:outline-starkit-indigo text-base rounded-[14px]" placeholder="Введите адрес..." />
-              <p className="text-sm font-normal text-black mb-2.5">Товары: {totalCount} шт.</p>
-              <div className="flex flex-row mb-6 justify-between items-center">
-                <p className="text-[28px] font-bold text-starkit-electric">Итого:</p>
-                <p className="text-[28px] font-bold text-starkit-electric">{totalPrice} ₽</p>
-              </div>
-              <Button onClick={handleOrderSubmit} text="Оформить заказ" />
-            </div>
+          <div className="py-24 flex items-center justify-center flex-col">
+            <img src="/images/robot_404.png" className="mb-6" />
+            <p className="text-black font-bold text-2xl text-center mb-5">Вы пока ничего не выбрали</p>
+            <a className="w-full flex justify-center" href="/catalog">
+              <Button text="Каталог" className="w-[250px]" />
+            </a>
           </div>
-          {isShowError && (
-            <div className="h-dvh fixed inset-0 bg-black/50 bg-none flex justify-center items-center z-[8]">
-              <div className="w-[425px] px-6 pb-6 flex flex-col justify-center items-center bg-white rounded-[40px]">
-                <img src="/images/robot_404.png" className="mt-[-128px] mb-8" />
-                <h1 className="mb-4 text-center text-starkit-electric text-2xl font-bold">Извините</h1>
-                <span className="mb-9 text-center text-black text-base font-medium">
-                  Заказ не получилось оформить. Уже начали исправлять данную проблему.<span className="text-starkit-electric"> Свяжемся с вами в ближайшее время.</span>
-                </span>
-                <Button onClick={() => setIsShowError(false)} text="Понятно" className="mb-5" />
+        </main>
+      );
+    } else {
+      return (
+        <>
+          <main className="bg-starkit-magnolia">
+            <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
+            <div className="grid grid-cols-[3fr_1fr] px-32 justify-center items-start gap-x-6">
+              <div className="w-full flex flex-col gap-y-7">
+                {data.map((item: CartItem) => (
+                  <CartCard onDeleteItem={deleteItem} onUpdateCount={updateLocalStorage} key={item.id} id={item.id} name={item.name} image={item.image_ref} price={item.price} quantity={item.quantity} count={item.count} />
+                ))}
+              </div>
+              <div className="w-full py-[30px] px-[20px] flex flex-col bg-white rounded-[40px]">
+                <h1 className="w-full text-center text-[28px] font-bold text-starkit-electric">Заказ</h1>
+                <Label text="Адрес" />
+                <textarea value={address} onChange={handleChangeAddress} className="w-full h-[105px] p-3.5 mb-6 border border-starkit-lavender focus:outline-starkit-indigo text-base rounded-[14px]" placeholder="Введите адрес..." />
+                <p className="text-sm font-normal text-black mb-2.5">Товары: {totalCount} шт.</p>
+                <div className="flex flex-row mb-6 justify-between items-center">
+                  <p className="text-[28px] font-bold text-starkit-electric">Итого:</p>
+                  <p className="text-[28px] font-bold text-starkit-electric">{totalPrice} ₽</p>
+                </div>
+                <Button onClick={handleOrderSubmit} text="Оформить заказ" />
               </div>
             </div>
-          )}
-        </main>
-      </>
-    );
-  }
-  /*} else {
+            {isShowError && (
+              <div className="h-dvh fixed inset-0 bg-black/50 bg-none flex justify-center items-center z-[8]">
+                <div className="w-[425px] px-6 pb-6 flex flex-col justify-center items-center bg-white rounded-[40px]">
+                  <img src="/images/robot_404.png" className="mt-[-128px] mb-8" />
+                  <h1 className="mb-4 text-center text-starkit-electric text-2xl font-bold">Извините</h1>
+                  <span className="mb-9 text-center text-black text-base font-medium">
+                    Заказ не получилось оформить. Уже начали исправлять данную проблему.<span className="text-starkit-electric"> Свяжемся с вами в ближайшее время.</span>
+                  </span>
+                  <Button onClick={() => setIsShowError(false)} text="Понятно" className="mb-5" />
+                </div>
+              </div>
+            )}
+          </main>
+        </>
+      );
+    }
+  } else {
     return null;
-    }*/
+  }
 };

@@ -1,18 +1,26 @@
 export interface Item {
   id: number;
-  category: string;
+  category: CategoryForProduct;
   name: string;
   description: string;
   image_ref?: string;
   price: number;
-  quantity: number;
+  all_quantity: number;
 }
 
-export interface HistoryItem {
-  id: number;
-  name: string;
+export interface OrdersforHistory {
+  number: number;
+  order_details: HistoryProduct[];
+  user: number;
+  order_date: string;
+  status: number;
+  address: string;
+}
+
+export interface HistoryProduct {
+  product: ProductForCategory;
   image_ref?: string;
-  price: number;
+  price_at_order: number;
   quantity: number;
 }
 
@@ -26,6 +34,17 @@ export interface CartItem {
 }
 
 export interface Category {
+  id: number;
+  products: ProductForCategory[];
+  name: string;
+}
+
+export interface ProductForCategory {
+  id: number;
+  name: string;
+}
+
+export interface CategoryForProduct {
   id: number;
   name: string;
 }

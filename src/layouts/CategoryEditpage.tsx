@@ -48,7 +48,7 @@ export const CategoryEditpage = () => {
   };
 
   //  обновления access токена при ошибке "не авторизован"
-  /*const [updateAccessToken] = useUpdateAccessTokenMutation();
+  const [updateAccessToken] = useUpdateAccessTokenMutation();
   const [isTokenRefreshing, setIsTokenRefreshing] = useState(false);
   const fetchLessons = async () => {
     try {
@@ -75,12 +75,12 @@ export const CategoryEditpage = () => {
 
   useEffect(() => {
     fetchLessons();
-  }, []);*/
+  }, []);
 
   // запрос данных с бэка
-  //const { categories, isLoading: isGettingCourses, isSuccess, isError, error, refetch } = useGetCategoriesQuery();
+  const { data: categories, isLoading: isGettingCourses, isSuccess: isSuccessCategories, isError: isErrorCategories, error, refetch } = useGetCategoriesQuery();
 
-  const categories = [
+  /*const categories = [
     {
       id: 1,
       name: "Спорт",
@@ -105,20 +105,21 @@ export const CategoryEditpage = () => {
       id: 6,
       name: "Ароматерапия",
     },
-  ];
+  ];*/
 
   const getNameById = (id: number) => {
-    const category = categories.find((category) => category.id === id);
-    return category ? category.name : "";
+    const category = categories?.find((category) => category.id === id);
+    return category?.name;
   };
 
-  const [nameCategory, setNameCategory] = useState<string>(getNameById(categoryIdNumber));
+  const [nameCategory, setNameCategory] = useState<string>(getNameById(categoryIdNumber) || "");
+  console.log("nameCategory", getNameById(categoryIdNumber) || "");
   const [message, setMessage] = useState<string>("");
 
   const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setNameCategory(value);
-    const categoryExists = categories.some((category) => category.name.toLowerCase() === value.toLowerCase());
+    const categoryExists = categories?.some((category) => category.name.toLowerCase() === value.toLowerCase());
     if (categoryExists) {
       setMessage("Эта категория уже существует.");
     } else {

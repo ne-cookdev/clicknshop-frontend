@@ -8,7 +8,7 @@ import { HistoryCard } from "../components/HistoryCard/HistoryCard";
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Button } from "../components/Button/Button";
 
-import { HistoryItem } from "../entities/catalog/model/types";
+import { OrdersforHistory, HistoryProduct } from "../entities/catalog/model/types";
 
 export const Historypage = () => {
   // нужно для редиректа
@@ -24,12 +24,12 @@ export const Historypage = () => {
   }, [role, navigate]);
 
   // запрос данных с бэка
-  //const { data, isLoading: isGettingCourses, isSuccess, isError, error, refetch } = useGetHistoryQuery();
+  const { data, isLoading: isGettingCourses, isSuccess, isError, error, refetch } = useGetHistoryQuery();
 
   // Извлекаем данные из localStorage
   const orderData = JSON.parse(localStorage.getItem("order") ?? "{}");
 
-  const data = [
+  /*const data = [
     {
       id: 4,
       name: "Бананы",
@@ -51,7 +51,7 @@ export const Historypage = () => {
       price: 1,
       quantity: 5,
     },
-  ];
+  ];*/
 
   // запрос на выход
   const [logoutUser, { isLoading: isLogoutLoading }] = useLogoutUserMutation();
@@ -67,7 +67,7 @@ export const Historypage = () => {
   };
 
   //  обновления access токена при ошибке "не авторизован"
-  /*const [updateAccessToken] = useUpdateAccessTokenMutation();
+  const [updateAccessToken] = useUpdateAccessTokenMutation();
   const [isTokenRefreshing, setIsTokenRefreshing] = useState(false);
   const fetchLessons = async () => {
     try {
@@ -96,38 +96,41 @@ export const Historypage = () => {
     fetchLessons();
   }, []);
 
-  if (isSuccess) {*/
-  if (data.length == 0) {
-    return (
-      <main className="body_404">
-        <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-        <div className="py-24 flex items-center justify-center flex-col">
-          <img src="/images/robot_404.png" className="mb-6" />
-          <p className="text-black font-bold text-2xl text-center mb-5">Вы пока ничего не заказали</p>
-          <a className="w-full flex justify-center" href="/catalog">
-            <Button text="Каталог" className="w-[250px]" />
-          </a>
-        </div>
-      </main>
-    );
-  } else {
-    return (
-      <>
-        <main className="bg-starkit-magnolia">
+  if (isSuccess) {
+    if (data.length == 0) {
+      return (
+        <main className="body_404">
           <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-          <div className="flex justify-center flex-col items-center">
-            <div>поиск</div>
-            <div className="grid grid-cols-4 gap-y-12 gap-x-16">
-              {data.map((item: HistoryItem) => (
-                <HistoryCard order={orderData} key={item.id} id={item.id} name={item.name} image={item.image_ref} price={item.price} quantity={item.quantity} />
-              ))}
-            </div>
+          <div className="py-24 flex items-center justify-center flex-col">
+            <img src="/images/robot_404.png" className="mb-6" />
+            <p className="text-black font-bold text-2xl text-center mb-5">Вы пока ничего не заказали</p>
+            <a className="w-full flex justify-center" href="/catalog">
+              <Button text="Каталог" className="w-[250px]" />
+            </a>
           </div>
         </main>
-      </>
-    );
-  }
-  /*} else {
+      );
+    } else {
+      return (
+        <>
+          <main className="bg-starkit-magnolia">
+            <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
+            <div className="flex justify-center flex-col items-center">
+              <div className="grid grid-cols-4 gap-y-12 gap-x-16">
+                {data.map((order: OrdersforHistory) => (
+                  <>
+                    {order.order_details.map((product: HistoryProduct) => (
+                      <HistoryCard order={orderData} key={`${order.number + product.product.id}`} id={product.product.id} name={product.product.name} image={product.image_ref} price={product.price_at_order} quantity={product.quantity} />
+                    ))}
+                  </>
+                ))}
+              </div>
+            </div>
+          </main>
+        </>
+      );
+    }
+  } else {
     return null;
-  }*/
+  }
 };
