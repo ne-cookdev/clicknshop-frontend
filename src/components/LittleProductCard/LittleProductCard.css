@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.gradient-text {
+  background-color: #1c24aa;
+  background-image: linear-gradient(90deg, #1c24aa, #b7b8fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@layer components {
+  .littleproductcard_background {
+    @apply relative w-full h-full p-3.5 flex flex-col justify-stretch items-center bg-white border border-starkit-lavender rounded-[20px];
+  }
+
+  .littleproductcard_name {
+    @apply w-full mb-1 text-base leading-5 font-bold gradient-text text-left;
+  }
+
+  .littleproductcard_text {
+    @apply w-full mb-1 text-sm font-normal text-black;
+  }
+
+  .littleproductcard_price {
+    @apply w-full mb-1 text-base text-end leading-5 font-bold gradient-text text-left;
+  }
+}

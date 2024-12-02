@@ -52,3 +52,18 @@ export interface CategoryForProduct {
   id: number;
   name: string;
 }
+
+export interface Order {
+  number: number;
+  order_details: ProductInOrder[];
+  user: number;
+  order_date: string;
+  status: number;
+  address: string;
+}
+
+export interface ProductInOrder {
+  product: ProductForCategory;
+  price_at_order: number;
+  quantity: number;
+}

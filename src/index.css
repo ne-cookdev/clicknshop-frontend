@@ -7,6 +7,8 @@
 @import "./components/Title/Title.css";
 @import "./components/CartCard/CartCard.css";
 @import "./components/CategoryCard/CategoryCard.css";
+@import "./components/OrderCard/OrderCard.css";
+@import "./components/LittleProductCard/LittleProductCard.css";
 @import "./layouts/layouts_styles/Authpages.css";
 @import "./layouts/layouts_styles/Loginpage.css";
 @import "./layouts/layouts_styles/NoFoundpage.css";

@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Item } from "../../entities/catalog/model/types";
 import { Category } from "../../entities/catalog/model/types";
 import { OrdersforHistory } from "../../entities/catalog/model/types";
+import { Order } from "../../entities/catalog/model/types";
 
 export const api = createApi({
   reducerPath: "apiTwo",
@@ -30,34 +31,6 @@ export const api = createApi({
         url: "/orders/",
         method: "POST",
         body: { order_details: args.order_details, address: args.address },
-      }),
-    }),
-    /* товары */
-    getItems: builder.query<Item[], void>({
-      query: () => ({
-        url: `/products`,
-        method: "GET",
-      }),
-    }),
-    createItem: builder.mutation({
-      query: (args) => ({
-        url: `/products/`,
-        method: "POST",
-        body: { category_id: args.category_id, image_ref: args.image, name: args.name, description: args.description, weight: args.weight, price: args.price, length: args.length, width: args.width, height: args.height },
-      }),
-    }),
-    editItem: builder.mutation({
-      query: (args) => ({
-        url: `/products/${args.id}/`,
-        method: "PATCH",
-        body: { id: args.id, category_id: args.category_id, image_ref: args.image, name: args.name, description: args.description, weight: args.weight, price: args.price, length: args.length, width: args.width, height: args.height },
-      }),
-    }),
-    deleteItem: builder.mutation({
-      query: (args) => ({
-        url: `/products/${args.id}`,
-        method: "DELETE",
-        body: { id: args.id },
       }),
     }),
     /* категории */
@@ -88,7 +61,63 @@ export const api = createApi({
         body: { id: args.id },
       }),
     }),
+    /* товары */
+    getItems: builder.query<Item[], void>({
+      query: () => ({
+        url: `/products`,
+        method: "GET",
+      }),
+    }),
+    createItem: builder.mutation({
+      query: (args) => ({
+        url: `/products/`,
+        method: "POST",
+        body: { category_id: args.category_id, image_ref: args.image, name: args.name, description: args.description, weight: args.weight, price: args.price, length: args.length, width: args.width, height: args.height },
+      }),
+    }),
+    editItem: builder.mutation({
+      query: (args) => ({
+        url: `/products/${args.id}/`,
+        method: "PATCH",
+        body: { id: args.id, category_id: args.category_id, image_ref: args.image, name: args.name, description: args.description, weight: args.weight, price: args.price, length: args.length, width: args.width, height: args.height },
+      }),
+    }),
+    deleteItem: builder.mutation({
+      query: (args) => ({
+        url: `/products/${args.id}`,
+        method: "DELETE",
+        body: { id: args.id },
+      }),
+    }),
+    /* заказы */
+    getOrders: builder.query<Order[], void>({
+      query: () => ({
+        url: `/orders`,
+        method: "GET",
+      }),
+    }),
+    createOrder: builder.mutation({
+      query: (args) => ({
+        url: `/orders/`,
+        method: "POST",
+        body: { name: args.name },
+      }),
+    }),
+    editOrder: builder.mutation({
+      query: (args) => ({
+        url: `/orders/${args.id}/`,
+        method: "PATCH",
+        body: { id: args.id, name: args.name },
+      }),
+    }),
+    deleteOrder: builder.mutation({
+      query: (args) => ({
+        url: `/orders/${args.number}`,
+        method: "DELETE",
+        body: { number: args.number },
+      }),
+    }),
   }),
 });
 
-export const { useGetHistoryQuery, usePlaceOrderMutation, useGetItemsQuery, useCreateItemMutation, useEditItemMutation, useDeleteItemMutation, useGetCategoriesQuery, useCreateCategoryMutation, useEditCategoryMutation, useDeleteCategoryMutation } = api;
+export const { useGetHistoryQuery, usePlaceOrderMutation, useGetCategoriesQuery, useCreateCategoryMutation, useEditCategoryMutation, useDeleteCategoryMutation, useGetItemsQuery, useCreateItemMutation, useEditItemMutation, useDeleteItemMutation, useGetOrdersQuery, useCreateOrderMutation, useEditOrderMutation, useDeleteOrderMutation } = api;

@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.gradient-text {
+  background-color: #1c24aa;
+  background-image: linear-gradient(90deg, #1c24aa, #b7b8fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@layer components {
+  .ordercard_background {
+    @apply w-full p-8 flex flex-row justify-start items-start bg-white rounded-[40px];
+  }
+
+  .ordercard_info {
+    @apply w-[25%] flex flex-col;
+  }
+
+  .ordercard_number {
+    @apply mb-3 text-[28px] font-bold gradient-text;
+  }
+
+  .ordercard_tag_div {
+    @apply w-full flex flex-wrap gap-y-2 items-center mb-8;
+  }
+
+  .ordercard_yellow_tag_div {
+    @apply mr-1.5 max-[425px]:py-0 py-1 max-[425px]:px-2 px-2.5 rounded-[20px] justify-center items-center inline-flex border border-starkit-lightorange bg-white;
+  }
+
+  .ordercard_yellow_tag_span {
+    @apply text-center text-starkit-lightorange max-[425px]:text-[10px] text-xs font-normal;
+  }
+
+  .ordercard_green_tag_div {
+    @apply mr-1.5 max-[425px]:py-0 py-1 max-[425px]:px-2 px-2.5 rounded-[20px] justify-center items-center inline-flex border border-starkit-lightgreen bg-white;
+  }
+
+  .ordercard_green_tag_span {
+    @apply text-center text-starkit-lightgreen max-[425px]:text-[10px] text-xs font-normal;
+  }
+
+  .ordercard_text {
+    @apply mb-4 text-sm font-normal text-black;
+  }
+
+  .ordercard_icons_price {
+    @apply w-full mt-1.5 flex flex-row justify-between items-center;
+  }
+
+  .ordercard_icons {
+    @apply flex flex-row gap-x-6 justify-center items-center;
+  }
+
+  .ordercard_editicon {
+    @apply w-[40px] h-[40px] fill-starkit-lavender;
+  }
+
+  .ordercard_trashicon {
+    @apply w-[30px] h-[40px] fill-starkit-lavender;
+  }
+
+  .ordercard_price {
+    @apply text-[28px] font-bold text-starkit-electric;
+  }
+
+  .ordercard_products {
+    @apply w-[75%] pl-9 grid grid-cols-5 items-stretch justify-center gap-3;
+  }
+}

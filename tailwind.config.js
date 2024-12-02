@@ -21,6 +21,8 @@ export default {
         button: "#2E39CE",
         hoverbutton: "#2731AF",
         focusbutton: "#202890",
+        lightgreen: "#B5E3A6",
+        lightorange: "#E3BAA6",
       },
     },
   },
