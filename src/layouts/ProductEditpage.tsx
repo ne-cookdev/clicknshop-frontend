@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useEditProductMutation, useGetCategoriesQuery, useGetProductsQuery } from "../features/api/api";
+import { useGetCategoriesQuery } from "../features/api/api";
+import { useEditProductMutation, useGetProductsQuery } from "../features/api/productsApi";
 
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Label } from "../components/Label/Label";

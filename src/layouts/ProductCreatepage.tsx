@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useCreateProductMutation, useGetCategoriesQuery } from "../features/api/api";
+import { useGetCategoriesQuery } from "../features/api/api";
+import { useCreateProductMutation } from "../features/api/productsApi";
 
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Label } from "../components/Label/Label";

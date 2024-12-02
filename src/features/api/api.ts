@@ -61,34 +61,6 @@ export const api = createApi({
         body: { id: args.id },
       }),
     }),
-    /* товары */
-    getProducts: builder.query<Product[], void>({
-      query: () => ({
-        url: `/products`,
-        method: "GET",
-      }),
-    }),
-    createProduct: builder.mutation({
-      query: (args) => ({
-        url: `/products/`,
-        method: "POST",
-        body: { category_id: args.category_id, image_ref: args.image, name: args.name, description: args.description, weight: args.weight, price: args.price, length: args.length, width: args.width, height: args.height },
-      }),
-    }),
-    editProduct: builder.mutation({
-      query: (args) => ({
-        url: `/products/${args.id}/`,
-        method: "PATCH",
-        body: { id: args.id, category_id: args.category_id, image_ref: args.image, name: args.name, description: args.description, weight: args.weight, price: args.price, length: args.length, width: args.width, height: args.height },
-      }),
-    }),
-    deleteProduct: builder.mutation({
-      query: (args) => ({
-        url: `/products/${args.id}`,
-        method: "DELETE",
-        body: { id: args.id },
-      }),
-    }),
     /* заказы */
     getOrders: builder.query<Order[], void>({
       query: () => ({
@@ -120,4 +92,4 @@ export const api = createApi({
   }),
 });
 
-export const { useGetHistoryQuery, usePlaceOrderMutation, useGetCategoriesQuery, useCreateCategoryMutation, useEditCategoryMutation, useDeleteCategoryMutation, useGetProductsQuery, useCreateProductMutation, useEditProductMutation, useDeleteProductMutation, useGetOrdersQuery, useCreateOrderMutation, useEditOrderMutation, useDeleteOrderMutation } = api;
+export const { useGetHistoryQuery, usePlaceOrderMutation, useGetCategoriesQuery, useCreateCategoryMutation, useEditCategoryMutation, useDeleteCategoryMutation, useGetOrdersQuery, useCreateOrderMutation, useEditOrderMutation, useDeleteOrderMutation } = api;
