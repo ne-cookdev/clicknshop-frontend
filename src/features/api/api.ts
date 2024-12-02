@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { Item } from "../../entities/catalog/model/types";
+import { Product } from "../../entities/products/model/types";
 import { Category } from "../../entities/catalog/model/types";
 import { OrdersforHistory } from "../../entities/catalog/model/types";
 import { Order } from "../../entities/catalog/model/types";
@@ -62,27 +62,27 @@ export const api = createApi({
       }),
     }),
     /* товары */
-    getItems: builder.query<Item[], void>({
+    getProducts: builder.query<Product[], void>({
       query: () => ({
         url: `/products`,
         method: "GET",
       }),
     }),
-    createItem: builder.mutation({
+    createProduct: builder.mutation({
       query: (args) => ({
         url: `/products/`,
         method: "POST",
         body: { category_id: args.category_id, image_ref: args.image, name: args.name, description: args.description, weight: args.weight, price: args.price, length: args.length, width: args.width, height: args.height },
       }),
     }),
-    editItem: builder.mutation({
+    editProduct: builder.mutation({
       query: (args) => ({
         url: `/products/${args.id}/`,
         method: "PATCH",
         body: { id: args.id, category_id: args.category_id, image_ref: args.image, name: args.name, description: args.description, weight: args.weight, price: args.price, length: args.length, width: args.width, height: args.height },
       }),
     }),
-    deleteItem: builder.mutation({
+    deleteProduct: builder.mutation({
       query: (args) => ({
         url: `/products/${args.id}`,
         method: "DELETE",
@@ -120,4 +120,4 @@ export const api = createApi({
   }),
 });
 
-export const { useGetHistoryQuery, usePlaceOrderMutation, useGetCategoriesQuery, useCreateCategoryMutation, useEditCategoryMutation, useDeleteCategoryMutation, useGetItemsQuery, useCreateItemMutation, useEditItemMutation, useDeleteItemMutation, useGetOrdersQuery, useCreateOrderMutation, useEditOrderMutation, useDeleteOrderMutation } = api;
+export const { useGetHistoryQuery, usePlaceOrderMutation, useGetCategoriesQuery, useCreateCategoryMutation, useEditCategoryMutation, useDeleteCategoryMutation, useGetProductsQuery, useCreateProductMutation, useEditProductMutation, useDeleteProductMutation, useGetOrdersQuery, useCreateOrderMutation, useEditOrderMutation, useDeleteOrderMutation } = api;

@@ -31,7 +31,7 @@ export const OrderCard: React.FC<OrderCardProps> = (props) => {
     try {
       const response = await deleteOrder({ number: props.number }).unwrap();
       console.log(`Delete order "${props.number}" successfully:`, response);
-      navigate("/orders");
+      window.location.reload();
     } catch (error) {
       console.error("Order wasn't delete:", error);
     }

@@ -104,7 +104,7 @@ export const Historypage = () => {
           <div className="py-24 flex items-center justify-center flex-col">
             <img src="/images/robot_404.png" className="mb-6" />
             <p className="text-black font-bold text-2xl text-center mb-5">Вы пока ничего не заказали</p>
-            <a className="w-full flex justify-center" href="/catalog">
+            <a className="w-full flex justify-center" href="/products">
               <Button text="Каталог" className="w-[250px]" />
             </a>
           </div>

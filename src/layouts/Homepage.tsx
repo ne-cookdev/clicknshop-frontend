@@ -5,7 +5,7 @@ const Homepage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate("/catalog");
+    navigate("/products");
   }, [navigate]);
 
   return null;

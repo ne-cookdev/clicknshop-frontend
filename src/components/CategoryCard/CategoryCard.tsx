@@ -23,7 +23,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = (props) => {
     try {
       const response = await deleteCategory({ id: props.id }).unwrap();
       console.log(`delete category "${props.name}" successfully:`, response);
-      navigate("/categories");
+      window.location.reload();
     } catch (error) {
       console.error("Category wasn't delete:", error);
     }

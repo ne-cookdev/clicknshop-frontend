@@ -91,7 +91,7 @@ export const Orderspage = () => {
                   <a href="/categories">
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Категории</h2>
                   </a>
-                  <a href="/catalog">
+                  <a href="/products">
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Товары</h2>
                   </a>
                   <a href="/orders">

@@ -40,9 +40,9 @@ export const Loginpage = () => {
       const role = returned?.role ?? null;
       localStorage.setItem("role", role);
       if (role == "admin" || role == "superuser") {
-        navigate("/catalog");
+        navigate("/products");
       } else {
-        navigate("/catalog");
+        navigate("/products");
       }
     } catch (error) {
       const errorResponse = error as AuthErrorResponse;

@@ -12,7 +12,7 @@ interface CartCardProps {
   quantity: number;
   count: number;
   onUpdateCount: (id: number, count: number) => void;
-  onDeleteItem: (id: number) => void;
+  onDeleteProduct: (id: number) => void;
 }
 
 // Проверяем, что URL не пустой и соответствует формату изображения
@@ -22,10 +22,10 @@ function isValidImageUrl(url: string | undefined): boolean {
 
 export const CartCard: React.FC<CartCardProps> = (props) => {
   // ссылка на картинку
-  const [imgSrc, setImgSrc] = useState<string>(isValidImageUrl(props.image) ? props.image! : "/images/item_stub.png");
+  const [imgSrc, setImgSrc] = useState<string>(isValidImageUrl(props.image) ? props.image! : "/images/product_stub.png");
   // Если изображение не загрузилось, подставляем заглушку
   const handleError = () => {
-    setImgSrc("/images/item_stub.png");
+    setImgSrc("/images/product_stub.png");
   };
 
   // выбранное кол-во товара (в инпуте)
@@ -59,13 +59,13 @@ export const CartCard: React.FC<CartCardProps> = (props) => {
 
   // обработчиr иконки удаления товара
   const deleteHandler = () => {
-    props.onDeleteItem(props.id);
+    props.onDeleteProduct(props.id);
   };
 
   return (
     <div className="cartcard_background">
       <div className="cartcard_imgtext_div">
-        <img className="cartcard_img" src={imgSrc} alt="Item" onError={handleError} />
+        <img className="cartcard_img" src={imgSrc} alt="Product" onError={handleError} />
 
         <div className="cartcard_text_div">
           <h1 className="cartcard_name">{props.name}</h1>

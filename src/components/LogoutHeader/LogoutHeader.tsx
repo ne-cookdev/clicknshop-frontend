@@ -1,6 +1,6 @@
 import React from "react";
 
-import { HistoryItemsIcon } from "../Icons/HistoryItemsIcon";
+import { HistoryProductsIcon } from "../Icons/HistoryProductsIcon";
 import { CartIcon } from "../Icons/CartIcon";
 import { CatalogIcon } from "../Icons/CatalogIcon";
 import { LogoutIcon } from "../Icons/LogoutIcon";
@@ -18,12 +18,12 @@ export const LogoutHeader: React.FC<LogoutHeaderProps> = (props) => {
           {props.role != "admin" && props.role != "superuser" && (
             <>
               <a href="/history">
-                <HistoryItemsIcon className="logoutheader_icon" />
+                <HistoryProductsIcon className="logoutheader_icon" />
               </a>
               <a href="/cart">
                 <CartIcon className="logoutheader_icon" />
               </a>
-              <a href="/catalog">
+              <a href="/products">
                 <CatalogIcon className="logoutheader_icon" />
               </a>
             </>

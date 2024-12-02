@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useDeleteItemMutation } from "../../features/api/api";
+import { useDeleteProductMutation } from "../../features/api/api";
 
 import { Tag } from "../Tag/Tag";
 import { EditIcon } from "../Icons/EditIcon";
@@ -9,7 +9,7 @@ import { TrashIcon } from "../Icons/TrashIcon";
 import { Button } from "../Button/Button";
 import { Input } from "../Input/Input";
 
-interface CardProps {
+interface ProductCardProps {
   role: string;
   id: number;
   category: string;
@@ -26,17 +26,19 @@ function isValidImageUrl(url: string | undefined): boolean {
   return !!url && /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(url);
 }
 
-export const Card: React.FC<CardProps> = (props) => {
+export const ProductCard: React.FC<ProductCardProps> = (props) => {
   // ссылка на картинку
-  const [imgSrc, setImgSrc] = useState<string>(isValidImageUrl(props.image) ? props.image! : "/images/item_stub.png");
+  const [imgSrc, setImgSrc] = useState<string>(isValidImageUrl(props.image) ? props.image! : "/images/product_stub.png");
+
   // Если изображение не загрузилось, подставляем заглушку
   const handleError = () => {
-    setImgSrc("/images/item_stub.png");
+    setImgSrc("/images/product_stub.png");
   };
 
   // проверка валидности категории
   const isValidСategory = props.category && /^[\w\sа-яА-ЯёЁ]+$/.test(props.category);
 
+  // обновляем число товаров в заказе
   const updateLocalStorage = (updatedCount: number) => {
     const currentOrder = JSON.parse(localStorage.getItem("order") ?? "{}");
     if (currentOrder[props.id]) {
@@ -47,6 +49,8 @@ export const Card: React.FC<CardProps> = (props) => {
 
   // добавлен ли товар в корзину
   const [isAdded, setIsAdded] = useState<boolean>(false);
+
+  // обработчик добавления товара в корзину
   const addToCartHandler = () => {
     setIsAdded(true);
     const currentOrder = JSON.parse(localStorage.getItem("order") ?? "{}");
@@ -65,7 +69,7 @@ export const Card: React.FC<CardProps> = (props) => {
     localStorage.setItem("order", JSON.stringify(currentOrder));
   };
 
-  // выбранное кол-во товара (в инпуте)
+  // значение инпута для кол-ва товара
   let startValue;
   if (props.order[props.id]) {
     startValue = props.order[props.id].count;
@@ -92,7 +96,7 @@ export const Card: React.FC<CardProps> = (props) => {
     });
   };
 
-  // обработчик инпута с кол-вом товара
+  // обработчик инпута для кол-ва товара
   const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
     if (value >= 1 && value <= props.quantity) {
@@ -103,24 +107,24 @@ export const Card: React.FC<CardProps> = (props) => {
   // нужно для редиректа
   const navigate = useNavigate();
 
-  // Получаем хук для мутации
-  const [deleteItem, { isLoading, isError, isSuccess }] = useDeleteItemMutation();
+  // запрос на удаление товара
+  const [deleteProduct] = useDeleteProductMutation();
 
-  // обработчик иконки удаления категории
+  // обработчик иконки удаления товара
   const deleteHandler = async () => {
     try {
-      const response = await deleteItem({ id: props.id }).unwrap();
-      console.log(`Delete item "${props.name}" successfully:`, response);
-      navigate("/catalog");
+      const response = await deleteProduct({ id: props.id }).unwrap();
+      console.log(`Delete product "${props.name}" successfully:`, response);
+      window.location.reload();
     } catch (error) {
-      console.error("Item wasn't delete:", error);
+      console.error("Product wasn't delete:", error);
     }
   };
 
   return (
     <div className="card_background">
       <div className="card_img_div">
-        <img className="card_img" src={imgSrc} alt="Item" onError={handleError} />
+        <img className="card_img" src={imgSrc} alt="Product" onError={handleError} />
       </div>
 
       <div className="card_info_part">
@@ -141,7 +145,7 @@ export const Card: React.FC<CardProps> = (props) => {
 
         {props.role == "admin" || props.role == "superuser" ? (
           <div className="card_icons_div">
-            <a href={`/item/edit/${props.id}`}>
+            <a href={`/products/edit/${props.id}`}>
               <EditIcon className="card_editicon" />
             </a>
             <TrashIcon onClick={deleteHandler} className="card_trashicon" />

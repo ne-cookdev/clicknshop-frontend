@@ -8,9 +8,9 @@ import { Historypage } from "./layouts/Historypage";
 import { Categoriespage } from "./layouts/Categoriespage";
 import { CategoryEditpage } from "./layouts/CategoryEditpage";
 import { CategoryCreatepage } from "./layouts/CategoryCreatepage";
-import { Catalogpage } from "./layouts/Catalogpage";
-import { ItemEditpage } from "./layouts/ItemEditpage";
-import { ItemCreatepage } from "./layouts/ItemCreatepage";
+import { Productspage } from "./layouts/Productspage";
+import { ProductEditpage } from "./layouts/ProductEditpage";
+import { ProductCreatepage } from "./layouts/ProductCreatepage";
 import { Orderspage } from "./layouts/Orderspage";
 //import { OrderEditpage } from "./layouts/OrderEditpage";
 //import { OrderCreatepage } from "./layouts/OrderCreatepage";
@@ -48,14 +48,11 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/catalog",
-    element: <Catalogpage />,
-  },
-  {
-    path: "/item",
+    path: "/products",
     children: [
-      { path: "edit/:itemId", element: <ItemEditpage /> },
-      { path: "create", element: <ItemCreatepage /> },
+      { path: "", element: <Productspage /> },
+      { path: "edit/:productId", element: <ProductEditpage /> },
+      { path: "create", element: <ProductCreatepage /> },
     ],
   },
   {

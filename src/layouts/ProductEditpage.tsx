@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useCreateItemMutation, useGetCategoriesQuery } from "../features/api/api";
+import { useEditProductMutation, useGetCategoriesQuery, useGetProductsQuery } from "../features/api/api";
 
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Label } from "../components/Label/Label";
@@ -10,21 +11,52 @@ import { Input } from "../components/Input/Input";
 import { ErrorIcon } from "../components/Icons/ErrorIcon";
 import { Button } from "../components/Button/Button";
 
-export const ItemCreatepage = () => {
+type ProductParams = {
+  productId: string;
+};
+
+export const ProductEditpage = () => {
   // нужно для редиректа
   const navigate = useNavigate();
 
   // определяем роль пользователя
   const role = localStorage.getItem("role");
-
   useEffect(() => {
     if (role !== "admin" && role !== "superuser") {
       navigate("/");
     }
   }, [role, navigate]);
 
+  // id товара
+  const { productId } = useParams<ProductParams>();
+  const productIdNumber = parseInt(productId ?? "", 10);
+
+  // получаем все категории
+  const { data: categories, isSuccess: isSuccessCategories } = useGetCategoriesQuery();
+
+  // определяем названию категории по id
+  const getNameOfCategoryById = (id: number) => {
+    const category = categories?.find((category) => category.id === id);
+    return category?.name;
+  };
+
+  // определяем id категории по названию
+  const getIdByNameOfCategory = (name: string) => {
+    const category = categories?.find((category) => category.name === name);
+    return category?.id;
+  };
+
+  // получаем все товары
+  const { data: products, isSuccess: isSuccessProducts, error, refetch } = useGetProductsQuery();
+
+  // получение товара по id
+  const getProductById = (id: number) => {
+    const product = products?.find((product) => product.id === id);
+    return product;
+  };
+
   // запрос на выход
-  const [logoutUser, { isLoading: isLogoutLoading }] = useLogoutUserMutation();
+  const [logoutUser] = useLogoutUserMutation();
   const handleLogoutProcess = async () => {
     try {
       const refreshToken = localStorage.getItem("refresh");
@@ -61,20 +93,25 @@ export const ItemCreatepage = () => {
       console.error(error);
     }
   };
-
   useEffect(() => {
     fetchLessons();
   }, []);
 
-  // запрос данных с бэка
-  const { data: categories, isLoading: isGettingCourses, isSuccess: isSuccessCategories, isError: isErrorCategories, error, refetch } = useGetCategoriesQuery();
-  const getIdByName = (name: string) => {
-    const category = categories?.find((category) => category.name === name);
-    return category?.id;
-  };
+  // значения инпутов
+  const [nameCategory, setNameCategory] = useState<string>(getNameOfCategoryById(getProductById(productIdNumber)?.category?.id || 1) || "");
+  const [imageRef, setImageRef] = useState<string>(getProductById(productIdNumber)?.image_ref || "");
+  const [name, setName] = useState<string>(getProductById(productIdNumber)?.name || "");
+  const [description, setDescription] = useState(getProductById(productIdNumber)?.description || "");
+  const [weight, setWeight] = useState<string>(getProductById(productIdNumber)?.weight?.toString() || "");
+  const [price, setPrice] = useState<string>(getProductById(productIdNumber)?.price?.toString() || "");
+  const [length, setLength] = useState<string>(getProductById(productIdNumber)?.length?.toString() || "");
+  const [width, setWidth] = useState<string>(getProductById(productIdNumber)?.width?.toString() || "");
+  const [height, setHeight] = useState<string>(getProductById(productIdNumber)?.height?.toString() || "");
 
-  const [nameCategory, setNameCategory] = useState<string>("");
+  // значение ошибки для инпута категории
   const [categoryMessage, setCategoryMessage] = useState<string>("");
+
+  // обработчик инпута категории
   const inputCategoryHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setNameCategory(value);
@@ -85,71 +122,85 @@ export const ItemCreatepage = () => {
       setCategoryMessage("");
     }
   };
-
-  const [imageRef, setImageRef] = useState<string>("");
+  // обработчик инпута картинки
   const inputImageRefHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setImageRef(value);
   };
-
-  const [name, setName] = useState<string>("");
+  // обработчик инпута названия
   const inputNameHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setName(value);
   };
-
-  const [description, setDescription] = useState("");
+  // обработчик инпута описания
   const handleChangeDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(event.target.value);
   };
-
-  const [weight, setWeight] = useState<string>("");
+  // обработчик инпута веса
   const inputWeightHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setWeight(value);
   };
-
-  const [price, setPrice] = useState<string>("");
+  // обработчик инпута цены
   const inputPriceHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setPrice(value);
   };
-
-  const [length, setLength] = useState<string>("");
+  // обработчик инпута длины
   const inputLengthHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setLength(value);
   };
-
-  const [width, setWidth] = useState<string>("");
+  // обработчик инпута ширины
   const inputWidthHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setWidth(value);
   };
-
-  const [height, setHeight] = useState<string>("");
+  // обработчик инпута высоты
   const inputHeightHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setHeight(value);
   };
 
-  const [createItem, { isLoading, isError, isSuccess }] = useCreateItemMutation();
+  // обновляем значения инпутов после запросов
+  useEffect(() => {
+    if (!isSuccessProducts || !isSuccessCategories) {
+      return;
+    }
+    setNameCategory(getNameOfCategoryById(getProductById(productIdNumber)?.category?.id || 1) || "");
+    setImageRef(getProductById(productIdNumber)?.image_ref || "");
+    setName(getProductById(productIdNumber)?.name || "");
+    setDescription(getProductById(productIdNumber)?.description || "");
+    setWeight(getProductById(productIdNumber)?.weight?.toString() || "");
+    setPrice(getProductById(productIdNumber)?.price?.toString() || "");
+    setLength(getProductById(productIdNumber)?.length?.toString() || "");
+    setWidth(getProductById(productIdNumber)?.width?.toString() || "");
+    setHeight(getProductById(productIdNumber)?.height?.toString() || "");
+  }, [isSuccessProducts, isSuccessCategories]);
+
+  // запрос на редактирование товара
+  const [editProduct] = useEditProductMutation();
+
+  // состояние банера "Не получилось отредактировать"
   const [isShowError, setIsShowError] = useState(false);
 
-  const createItemHandler = async () => {
+  // обработчик кнопки "Готово"
+  const editProductHandler = async () => {
+    // проверяем, что нет ошибок
     if (categoryMessage != "") {
       return;
     }
+    // проверяем, что все поля (кроме картинки) заполнены
     if (nameCategory == "" || name == "" || description == "" || weight == "" || price == "" || length == "" || width == "" || height == "") {
       return;
     }
-
+    // делаем запрос
     try {
-      const response = await createItem({ category_id: getIdByName(nameCategory) || 1, image_ref: imageRef, name: name, description: description, weight: weight, price: price, length: length, width: width, height: height }).unwrap();
-      console.log(`Create product "${name}" successfully:`, response);
-      navigate("/catalog");
+      const response = await editProduct({ id: productIdNumber, category_id: getIdByNameOfCategory(nameCategory) || 1, image_ref: imageRef, name: name, description: description, weight: weight, price: price, length: length, width: width, height: height }).unwrap();
+      console.log(`Edit product successfully:`, response);
+      navigate("/products");
     } catch (error) {
-      console.error("Product wasn't create:", error);
+      console.error("Product wasn't edit:", error);
       setIsShowError(true);
     }
   };
@@ -161,7 +212,7 @@ export const ItemCreatepage = () => {
         <div className="mt-[-35px] flex justify-center items-center">
           <div className="w-[500px] px-6 py-7 pb-7 bg-white rounded-[40px]">
             <h3 className="w-full mb-5 text-3xl text-center font-bold">
-              Добавление <span className="text-starkit-electric">товара</span>
+              Редактирование <span className="text-starkit-electric">товара</span>
             </h3>
             <div className="mb-2">
               <Label text="Категория" />
@@ -229,7 +280,7 @@ export const ItemCreatepage = () => {
                 </div>
               </div>
             </div>
-            <Button onClick={createItemHandler} text="Готово" />
+            <Button onClick={editProductHandler} text="Готово" />
           </div>
         </div>
         {isShowError && (
@@ -238,9 +289,9 @@ export const ItemCreatepage = () => {
               <img src="/images/robot_404.png" className="mt-[-128px] mb-8" />
               <h1 className="mb-4 text-center text-starkit-electric text-2xl font-bold">Извините</h1>
               <span className="mb-9 text-center text-black text-base font-medium">
-                Товар не получилось создать.<span className="text-starkit-electric"> Уже начали исправлять данную проблему.</span>
+                Товар не получилось отредактировать.<span className="text-starkit-electric"> Уже начали исправлять данную проблему.</span>
               </span>
-              <a href="/catalog" className="w-full">
+              <a href="/products" className="w-full">
                 <Button onClick={() => setIsShowError(false)} text="Понятно" />
               </a>
             </div>

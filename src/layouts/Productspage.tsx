@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useGetItemsQuery } from "../features/api/api";
+import { useGetProductsQuery } from "../features/api/api";
 
-import { Card } from "../components/Card/Card";
+import { ProductCard } from "../components/ProductCard/ProductCard";
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Button } from "../components/Button/Button";
 
-import { Item } from "../entities/catalog/model/types";
+import { Product } from "../entities/products/model/types";
 
-export const Catalogpage = () => {
+export const Productspage = () => {
   // нужно для редиректа
   const navigate = useNavigate();
 
@@ -18,51 +18,13 @@ export const Catalogpage = () => {
   const role = localStorage.getItem("role");
 
   // запрос данных с бэка
-  const { data, isLoading: isGettingCourses, isSuccess, isError, error, refetch } = useGetItemsQuery();
+  const { data: products, isSuccess: isSuccessProducts, refetch } = useGetProductsQuery();
 
   // Извлекаем данные из localStorage
   const orderData = JSON.parse(localStorage.getItem("order") ?? "{}");
 
-  /*const data = [
-    {
-      id: 1,
-      category: "Спорт",
-      name: "Футбольный мяч",
-      description: "Профессиональный матчевый футбольный мяч Лига чемпионов – официальный 5 размер и вес UEFA : длина окружности 68,6 см вес 450 г. Подходит для соревнований профессионалов и любительских тренировок.",
-      image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
-      price: 1237,
-      quantity: 5,
-    },
-    {
-      id: 2,
-      category: "Спорт",
-      name: "Футбольный мяч",
-      description: "Профессиональный матчевый футбольный мяч Лига чемпионов – официальный 5 размер и вес UEFA : длина окружности 68,6 см вес 450 г. Подходит для соревнований профессионалов и любительских тренировок.",
-      price: 1237,
-      quantity: 5,
-    },
-    {
-      id: 3,
-      category: "Спорт",
-      name: "Футбольный мяч",
-      description: "Профессиональный матчевый футбольный мяч Лига чемпионов – официальный 5 размер и вес UEFA : длина окружности 68,6 см вес 450 г. Подходит для соревнований профессионалов и любительских тренировок.",
-      image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
-      price: 1237,
-      quantity: 5,
-    },
-    {
-      id: 4,
-      category: "Спорт",
-      name: "Футбольный мяч",
-      description: "Профессиональный матчевый футбольный мяч Лига чемпионов – официальный 5 размер и вес UEFA : длина окружности 68,6 см вес 450 г. Подходит для соревнований профессионалов и любительских тренировок.",
-      image_ref: "https://storage.yandexcloud.net/platform-test-s3/lesson1_preview.png",
-      price: 1237,
-      quantity: 5,
-    },
-  ];*/
-
   // запрос на выход
-  const [logoutUser, { isLoading: isLogoutLoading }] = useLogoutUserMutation();
+  const [logoutUser] = useLogoutUserMutation();
   const handleLogoutProcess = async () => {
     try {
       const refreshToken = localStorage.getItem("refresh");
@@ -99,13 +61,12 @@ export const Catalogpage = () => {
       console.error(error);
     }
   };
-
   useEffect(() => {
     fetchLessons();
   }, []);
 
-  if (isSuccess) {
-    if (data.length == 0) {
+  if (isSuccessProducts) {
+    if (products.length == 0) {
       return (
         <main className="body_404">
           <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
@@ -120,14 +81,14 @@ export const Catalogpage = () => {
         <>
           <main className="bg-starkit-magnolia">
             <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-            <div className="grid auto-cols-auto gap-y-5 justify-center items-center">
+            <div className="grid auto-rows-auto gap-y-5 justify-center items-center">
               {(role == "admin" || role == "superuser") && (
                 <div className="flex flex-row justify-between items-center">
-                  <div className="flex flex-row gap-x-5">
+                  <div className="flex flex-row gap-x-5 items-center">
                     <a href="/categories">
                       <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Категории</h2>
                     </a>
-                    <a href="/catalog">
+                    <a href="/products">
                       <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Товары</h2>
                     </a>
                     <a href="/orders">
@@ -141,15 +102,15 @@ export const Catalogpage = () => {
                     </a>
                   </div>
                   <div>
-                    <a href="/item/create">
+                    <a href="/products/create">
                       <Button text="Новый товар" className="px-14" />
                     </a>
                   </div>
                 </div>
               )}
-              <div className="grid grid-cols-4 gap-y-12 gap-x-16">
-                {data.map((item: Item) => (
-                  <Card order={orderData} key={item.id} id={item.id} role={role ? role : "user"} category={item.category?.name || ""} name={item?.name || ""} description={item?.description || ""} image={item?.image_ref || ""} price={item?.price || 0} quantity={item?.all_quantity || 0} />
+              <div className="mb-12 grid grid-cols-4 gap-y-12 gap-x-16">
+                {products.map((product: Product) => (
+                  <ProductCard order={orderData} key={product.id} id={product.id} role={role ? role : "user"} category={product.category.name} name={product.name} description={product.description} image={product?.image_ref || ""} price={product.price} quantity={product.all_quantity} />
                 ))}
               </div>
             </div>

@@ -19,10 +19,10 @@ function isValidImageUrl(url: string | undefined): boolean {
 
 export const HistoryCard: React.FC<HistoryCardProps> = (props) => {
   // ссылка на картинку
-  const [imgSrc, setImgSrc] = useState<string>(isValidImageUrl(props.image) ? props.image! : "/images/item_stub.png");
+  const [imgSrc, setImgSrc] = useState<string>(isValidImageUrl(props.image) ? props.image! : "/images/product_stub.png");
   // Если изображение не загрузилось, подставляем заглушку
   const handleError = () => {
-    setImgSrc("/images/item_stub.png");
+    setImgSrc("/images/product_stub.png");
   };
 
   const updateLocalStorage = (updatedCount: number) => {
@@ -91,7 +91,7 @@ export const HistoryCard: React.FC<HistoryCardProps> = (props) => {
   return (
     <div className="card_background">
       <div className="card_img_div">
-        <img className="card_img" src={imgSrc} alt="Item" onError={handleError} />
+        <img className="card_img" src={imgSrc} alt="Product" onError={handleError} />
       </div>
 
       <div className="card_info_part">

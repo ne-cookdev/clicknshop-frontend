@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
+import { useLogoutUserMutation } from "../features/api/accountsApi";
 import { usePlaceOrderMutation } from "../features/api/api";
 
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
@@ -9,9 +9,9 @@ import { CartCard } from "../components/CartCard/CartCard";
 import { Label } from "../components/Label/Label";
 import { Button } from "../components/Button/Button";
 
-import { CartItem } from "../entities/catalog/model/types";
+import { CartProduct } from "../entities/catalog/model/types";
 
-interface OrderItem {
+interface OrderProduct {
   product_id: number;
   quantity: number;
 }
@@ -22,36 +22,35 @@ export const Cartpage = () => {
 
   // определяем роль пользователя
   const role = localStorage.getItem("role");
-
   useEffect(() => {
     if (role === "admin" || role === "superuser") {
       navigate("/");
     }
   }, [role, navigate]);
 
-  const [data, setData] = useState<CartItem[]>([]);
+  const [data, setData] = useState<CartProduct[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
 
   // Функция для загрузки данных из localStorage
   const loadData = () => {
     const orderData = JSON.parse(localStorage.getItem("order") ?? "{}");
-    const itemsArray = Object.keys(orderData).map((key) => ({
+    const productsArray = Object.keys(orderData).map((key) => ({
       id: key,
       ...orderData[key],
     }));
-    setData(itemsArray);
+    setData(productsArray);
   };
 
   // Функция для пересчета итоговой стоимости
   const calculateTotalPrice = () => {
-    const total = data.reduce((sum, item) => sum + item.price * item.count, 0);
+    const total = data.reduce((sum, product) => sum + product.price * product.count, 0);
     setTotalPrice(total);
   };
 
   // Функция для пересчета итоговой стоимости
   const calculateTotalCount = () => {
-    const total = data.reduce((sum, item) => sum + item.count, 0);
+    const total = data.reduce((sum, product) => sum + product.count, 0);
     setTotalCount(total);
   };
 
@@ -77,7 +76,7 @@ export const Cartpage = () => {
   };
 
   // Функция для удаления товара из localStorage
-  const deleteItem = (id: number) => {
+  const deleteProduct = (id: number) => {
     // Обновляем данные в localStorage
     const orderData = JSON.parse(localStorage.getItem("order") ?? "{}");
 
@@ -99,20 +98,20 @@ export const Cartpage = () => {
 
   const handleOrderSubmit = async () => {
     const orderData = JSON.parse(localStorage.getItem("order") ?? "{}");
-    const itemsArray = Object.keys(orderData).map((key) => ({
+    const productsArray = Object.keys(orderData).map((key) => ({
       id: key,
       ...orderData[key],
     }));
 
-    let order_details: OrderItem[] = [];
-    console.log(itemsArray);
+    let order_details: OrderProduct[] = [];
+    console.log(productsArray);
 
-    itemsArray.forEach((i: CartItem) => {
-      const item = {
+    productsArray.forEach((i: CartProduct) => {
+      const product = {
         product_id: i.id,
         quantity: i.count,
       };
-      order_details.push(item);
+      order_details.push(product);
     });
 
     try {
@@ -182,7 +181,7 @@ export const Cartpage = () => {
           <div className="py-24 flex items-center justify-center flex-col">
             <img src="/images/robot_404.png" className="mb-6" />
             <p className="text-black font-bold text-2xl text-center mb-5">Вы пока ничего не выбрали</p>
-            <a className="w-full flex justify-center" href="/catalog">
+            <a className="w-full flex justify-center" href="/products">
               <Button text="Каталог" className="w-[250px]" />
             </a>
           </div>
@@ -195,8 +194,8 @@ export const Cartpage = () => {
             <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
             <div className="grid grid-cols-[3fr_1fr] px-32 justify-center items-start gap-x-6">
               <div className="w-full flex flex-col gap-y-7">
-                {data.map((item: CartItem) => (
-                  <CartCard onDeleteItem={deleteItem} onUpdateCount={updateLocalStorage} key={item.id} id={item.id} name={item.name} image={item.image_ref} price={item.price} quantity={item.quantity} count={item.count} />
+                {data.map((product: CartProduct) => (
+                  <CartCard onDeleteProduct={deleteProduct} onUpdateCount={updateLocalStorage} key={product.id} id={product.id} name={product.name} image={product.image_ref} price={product.price} quantity={product.quantity} count={product.count} />
                 ))}
               </div>
               <div className="w-full py-[30px] px-[20px] flex flex-col bg-white rounded-[40px]">
