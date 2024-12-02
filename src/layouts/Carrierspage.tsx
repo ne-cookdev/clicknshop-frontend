@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useGetCategoriesQuery } from "../features/api/categoriesApi";
+import { useGetCarriersQuery } from "../features/api/carriersApi";
 
-import { CategoryCard } from "../components/CategoryCard/CategoryCard";
+import { CarrierCard } from "../components/CarrierCard/CarrierCard";
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Button } from "../components/Button/Button";
 
-import { Category } from "../entities/categories/model/types";
+import { Carrier } from "../entities/carriers/model/types";
 
-export const Categoriespage = () => {
+export const Carrierspage = () => {
   // нужно для редиректа
   const navigate = useNavigate();
 
@@ -23,7 +23,7 @@ export const Categoriespage = () => {
   }, [role, navigate]);
 
   // получаем все категории
-  const { data: categories, isSuccess: isSuccessCategories, error, refetch } = useGetCategoriesQuery();
+  const { data: carriers, isSuccess: isSuccessCarriers, error, refetch } = useGetCarriersQuery();
 
   // запрос на выход
   const [logoutUser] = useLogoutUserMutation();
@@ -67,15 +67,15 @@ export const Categoriespage = () => {
     fetchLessons();
   }, []);
 
-  if (isSuccessCategories) {
-    if (categories.length == 0) {
+  if (isSuccessCarriers) {
+    if (carriers.length == 0) {
       return (
         <main className="body_404">
           <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
           <div className=" w-full px-80 flex flex-row justify-between items-center">
             <div className="flex flex-row gap-x-5">
               <a href="/categories">
-                <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Категории</h2>
+                <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Категории</h2>
               </a>
               <a href="/products">
                 <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Товары</h2>
@@ -84,7 +84,7 @@ export const Categoriespage = () => {
                 <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Заказы</h2>
               </a>
               <a href="/carriers">
-                <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставщики</h2>
+                <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Доставщики</h2>
               </a>
               <a href="/shipments">
                 <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставки</h2>
@@ -96,9 +96,9 @@ export const Categoriespage = () => {
           </div>
           <div className="py-32 flex items-center justify-center flex-col">
             <img src="/images/robot_404.png" className="mb-6" />
-            <p className="text-black font-bold text-2xl text-center mb-5">Пока нет категорий</p>
-            <a href="/categories/create">
-              <Button text="Новая категория" className="px-14" />
+            <p className="text-black font-bold text-2xl text-center mb-5">Пока нет доставщиков</p>
+            <a href="/carriers/create">
+              <Button text="Новый доставщик" className="px-14" />
             </a>
           </div>
         </main>
@@ -112,7 +112,7 @@ export const Categoriespage = () => {
               <div className="flex flex-row justify-between items-center">
                 <div className="flex flex-row gap-x-5">
                   <a href="/categories">
-                    <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Категории</h2>
+                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Категории</h2>
                   </a>
                   <a href="/products">
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Товары</h2>
@@ -121,7 +121,7 @@ export const Categoriespage = () => {
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Заказы</h2>
                   </a>
                   <a href="/carriers">
-                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставщики</h2>
+                    <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Доставщики</h2>
                   </a>
                   <a href="/shipments">
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставки</h2>
@@ -131,14 +131,14 @@ export const Categoriespage = () => {
                   </a>
                 </div>
                 <div>
-                  <a href="/categories/create">
-                    <Button text="Новая категория" className="px-14" />
+                  <a href="/carriers/create">
+                    <Button text="Новый доставщик" className="px-14" />
                   </a>
                 </div>
               </div>
               <div className="grid grid-cols-6 gap-y-[26px] gap-x-[26px]">
-                {categories.map((category: Category) => (
-                  <CategoryCard key={category.id} id={category.id} name={category.name} />
+                {carriers.map((carrier: Carrier) => (
+                  <CarrierCard key={carrier.id} id={carrier.id} name={carrier.name} />
                 ))}
               </div>
             </div>

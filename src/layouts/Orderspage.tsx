@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useGetOrdersQuery } from "../features/api/api";
+import { useGetOrdersQuery } from "../features/api/ordersApi";
 
 import { OrderCard } from "../components/OrderCard/OrderCard";
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Button } from "../components/Button/Button";
 
-import { Order } from "../entities/catalog/model/types";
+import { Order } from "../entities/orders/model/types";
 
 export const Orderspage = () => {
   // нужно для редиректа
@@ -16,18 +16,17 @@ export const Orderspage = () => {
 
   // определяем роль пользователя
   const role = localStorage.getItem("role");
-
   useEffect(() => {
     if (role !== "admin" && role !== "superuser") {
       navigate("/");
     }
   }, [role, navigate]);
 
-  // запрос данных с бэка
-  const { data, isLoading, isSuccess, isError, error, refetch } = useGetOrdersQuery();
+  // получаем все заказы
+  const { data: orders, isSuccess: isSuccessOrders, error, refetch } = useGetOrdersQuery();
 
   // запрос на выход
-  const [logoutUser, { isLoading: isLogoutLoading }] = useLogoutUserMutation();
+  const [logoutUser] = useLogoutUserMutation();
   const handleLogoutProcess = async () => {
     try {
       const refreshToken = localStorage.getItem("refresh");
@@ -64,19 +63,43 @@ export const Orderspage = () => {
       console.error(error);
     }
   };
-
   useEffect(() => {
     fetchLessons();
   }, []);
 
-  if (isSuccess) {
-    if (data.length == 0) {
+  if (isSuccessOrders) {
+    if (orders.length == 0) {
       return (
         <main className="body_404">
           <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
+          <div className=" w-full px-80 flex flex-row justify-between items-center">
+            <div className="flex flex-row gap-x-5">
+              <a href="/categories">
+                <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Категории</h2>
+              </a>
+              <a href="/products">
+                <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Товары</h2>
+              </a>
+              <a href="/orders">
+                <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Заказы</h2>
+              </a>
+              <a href="/carriers">
+                <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставщики</h2>
+              </a>
+              <a href="/shipments">
+                <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставки</h2>
+              </a>
+              <a href="/warehouses">
+                <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
+              </a>
+            </div>
+          </div>
           <div className="py-32 flex items-center justify-center flex-col">
             <img src="/images/robot_404.png" className="mb-6" />
-            <p className="text-black font-bold text-2xl text-center mb-5">Пока нет категорий</p>
+            <p className="text-black font-bold text-2xl text-center mb-5">Пока нет заказов</p>
+            <a href="/orders/create">
+              <Button text="Новый заказ" className="px-14" />
+            </a>
           </div>
         </main>
       );
@@ -97,7 +120,10 @@ export const Orderspage = () => {
                   <a href="/orders">
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Заказы</h2>
                   </a>
-                  <a href="/deliveries">
+                  <a href="/carriers">
+                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставщики</h2>
+                  </a>
+                  <a href="/shipments">
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставки</h2>
                   </a>
                   <a href="/warehouses">
@@ -105,14 +131,14 @@ export const Orderspage = () => {
                   </a>
                 </div>
                 <div>
-                  <a href="/order/create">
+                  <a href="/orders/create">
                     <Button text="Новый заказ" className="px-14" />
                   </a>
                 </div>
               </div>
               <div className="w-full flex flex-col gap-y-7">
-                {data.map((order: Order) => (
-                  <OrderCard key={order.number} number={order.number} products={order.order_details} user={order.user} date={order.order_date} status={order.status} address={order.address} />
+                {orders.map((order: Order) => (
+                  <OrderCard key={order.number} number={order.number} products={order.order_details} user={order.user.email} date={order.order_date} status={order.status} address={order.address} />
                 ))}
               </div>
             </div>
@@ -124,6 +150,3 @@ export const Orderspage = () => {
     return null;
   }
 };
-{
-  /* onDeleteOrder={deleteOrder} */
-}

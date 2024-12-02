@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useDeleteOrderMutation } from "../../features/api/api";
+import { useDeleteOrderMutation } from "../../features/api/ordersApi";
 
 import { Tag } from "../Tag/Tag";
 import { EditIcon } from "../Icons/EditIcon";
 import { TrashIcon } from "../Icons/TrashIcon";
 import { LittleProductCard } from "../LittleProductCard/LittleProductCard";
 
-import type { ProductInOrder } from "../../entities/catalog/model/types";
+import type { OrderDetail } from "../../entities/orders/model/types";
 
 interface OrderCardProps {
   number: number;
-  products: ProductInOrder[];
-  user: number;
+  products: OrderDetail[];
+  user: string;
   date: string;
   status: number;
   address: string;
@@ -41,7 +41,7 @@ export const OrderCard: React.FC<OrderCardProps> = (props) => {
   // Функция для пересчета итоговой стоимости
   const calculateTotalPrice = () => {
     let total = 0;
-    props.products.map((product: ProductInOrder) => (total += product.price_at_order * product.quantity));
+    props.products.map((product: OrderDetail) => (total += product.price_at_order * product.quantity));
     setTotalPrice(total);
   };
 
@@ -60,7 +60,7 @@ export const OrderCard: React.FC<OrderCardProps> = (props) => {
         <p className="ordercard_text">Адрес: {props.address}</p>
         <div className="ordercard_icons_price">
           <div className="ordercard_icons">
-            <a href={`/order/edit/${props.number}`}>
+            <a href={`/orders/edit/${props.number}`}>
               <EditIcon className="ordercard_editicon" />
             </a>
             <TrashIcon onClick={deleteHandler} className="ordercard_trashicon" />
@@ -70,7 +70,7 @@ export const OrderCard: React.FC<OrderCardProps> = (props) => {
       </div>
 
       <div className="ordercard_products">
-        {props.products.map((product: ProductInOrder) => (
+        {props.products.map((product: OrderDetail) => (
           <LittleProductCard key={product.product.id} id={product.product.id} name={product.product.name} price={product.price_at_order} count={product.quantity} />
         ))}
       </div>

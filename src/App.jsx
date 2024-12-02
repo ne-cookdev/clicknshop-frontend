@@ -14,6 +14,15 @@ import { ProductCreatepage } from "./layouts/ProductCreatepage";
 import { Orderspage } from "./layouts/Orderspage";
 //import { OrderEditpage } from "./layouts/OrderEditpage";
 //import { OrderCreatepage } from "./layouts/OrderCreatepage";
+import { Carrierspage } from "./layouts/Carrierspage";
+import { CarrierEditpage } from "./layouts/CarrierEditpage";
+import { CarrierCreatepage } from "./layouts/CarrierCreatepage";
+import { Shipmentspage } from "./layouts/Shipmentspage";
+import { ShipmentEditpage } from "./layouts/ShipmentEditpage";
+import { ShipmentCreatepage } from "./layouts/ShipmentCreatepage";
+//import { Warehousespage } from "./layouts/Warehousespage";
+//import { WarehouseEditpage } from "./layouts/WarehouseEditpage";
+//import { WarehouseCreatepage } from "./layouts/WarehouseCreatepage";
 
 const router = createBrowserRouter([
   {
@@ -38,11 +47,8 @@ const router = createBrowserRouter([
   },
   {
     path: "/categories",
-    element: <Categoriespage />,
-  },
-  {
-    path: "/category",
     children: [
+      { path: "", element: <Categoriespage /> },
       { path: "edit/:categoryId", element: <CategoryEditpage /> },
       { path: "create", element: <CategoryCreatepage /> },
     ],
@@ -57,13 +63,34 @@ const router = createBrowserRouter([
   },
   {
     path: "/orders",
-    element: <Orderspage />,
+    children: [
+      { path: "", element: <Orderspage /> },
+      //{ path: "edit/:orderId", element: <OrderEditpage /> },
+      //{ path: "create", element: <OrderCreatepage /> },
+    ],
+  },
+  {
+    path: "/carriers",
+    children: [
+      { path: "", element: <Carrierspage /> },
+      { path: "edit/:carrierId", element: <CarrierEditpage /> },
+      { path: "create", element: <CarrierCreatepage /> },
+    ],
+  },
+  {
+    path: "/shipments",
+    children: [
+      { path: "", element: <Shipmentspage /> },
+      { path: "edit/:shipmentId", element: <ShipmentEditpage /> },
+      { path: "create", element: <ShipmentCreatepage /> },
+    ],
   },
   /*{
-    path: "/order",
+    path: "/warehouses",
     children: [
-      { path: "edit/:orderId", element: <OrderEditpage /> },
-      { path: "create", element: <OrderCreatepage /> },
+      { path: "", element: <Warehousespage /> },
+      { path: "edit/:warehouseId", element: <WarehouseEditpage /> },
+      { path: "create", element: <WarehouseCreatepage /> },
     ],
   },*/
   {

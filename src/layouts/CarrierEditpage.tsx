@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useGetCategoriesQuery, useCreateCategoryMutation } from "../features/api/categoriesApi";
+import { useGetCarriersQuery, useEditCarrierMutation } from "../features/api/carriersApi";
 
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Label } from "../components/Label/Label";
 import { Input } from "../components/Input/Input";
 import { Button } from "../components/Button/Button";
 
-export const CategoryCreatepage = () => {
+type CarrierParams = {
+  carrierId: string;
+};
+
+export const CarrierEditpage = () => {
   // нужно для редиректа
   const navigate = useNavigate();
 
@@ -20,6 +25,10 @@ export const CategoryCreatepage = () => {
       navigate("/");
     }
   }, [role, navigate]);
+
+  // id доставщика
+  const { carrierId } = useParams<CarrierParams>();
+  const сarrierIdNumber = parseInt(carrierId ?? "", 10);
 
   // запрос на выход
   const [logoutUser] = useLogoutUserMutation();
@@ -63,50 +72,67 @@ export const CategoryCreatepage = () => {
     fetchLessons();
   }, []);
 
-  // получаем все категории
-  const { data: categories, error, refetch } = useGetCategoriesQuery();
+  // получаем всех доставщиков
+  const { data: carriers, isSuccess: isSuccessCarriers, error, refetch } = useGetCarriersQuery();
+  // определяем название доставщика по id
+  const getNameOfCarrierById = (id: number) => {
+    const carrier = carriers?.find((carrier) => carrier.id === id);
+    return carrier?.name;
+  };
 
-  // значение инпута названия
-  const [nameCategory, setNameCategory] = useState<string>("");
+  // значение инпута
+  const [nameCarrier, setNameCarrier] = useState<string>(getNameOfCarrierById(сarrierIdNumber) || "");
 
-  // значение ошибки для инпута названия
+  // значение ошибки для инпута
   const [message, setMessage] = useState<string>("");
 
   // обработчик инпута названия
   const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setNameCategory(value);
-    const categoryExists = categories?.some((category) => category.name.toLowerCase() === value.toLowerCase());
-    if (categoryExists) {
-      setMessage("Эта категория уже существует.");
+    setNameCarrier(value);
+    const carrierExists = carriers?.some((carrier) => carrier.name.toLowerCase() === value.toLowerCase());
+    if (carrierExists) {
+      setMessage("Этот доставщик уже существует.");
     } else {
       setMessage("");
     }
   };
 
-  // запрос на создание категории
-  const [createCategory] = useCreateCategoryMutation();
+  // обновляем значение инпута после запросов
+  useEffect(() => {
+    if (!isSuccessCarriers) {
+      return;
+    }
+    setNameCarrier(getNameOfCarrierById(сarrierIdNumber) || "");
+  }, [isSuccessCarriers]);
 
-  // состояние банера "Не получилось создать"
+  // запрос на редактирование доставщика
+  const [editCarrier] = useEditCarrierMutation();
+
+  // состояние банера "Не получилось отредактировать"
   const [isShowError, setIsShowError] = useState(false);
 
   // обработчик кнопки "Готово"
-  const createCategoryHandler = async () => {
+  const editCarrierHandler = async () => {
     // проверяем, что нет ошибок
     if (message != "") {
       return;
     }
-    // проверяем, что все поля заполнены
-    if (nameCategory == "") {
+    // проверяем, что поле заполнены
+    if (nameCarrier == "") {
+      return;
+    }
+    // проверяем, что значения изменились
+    if (nameCarrier == getNameOfCarrierById(сarrierIdNumber)) {
       return;
     }
     // делаем запрос
     try {
-      const response = await createCategory({ name: nameCategory.charAt(0).toUpperCase() + nameCategory.slice(1).toLowerCase() }).unwrap();
-      console.log(`Категория с именем "${nameCategory}" успешно создана:`, response);
-      navigate("/categories");
+      const response = await editCarrier({ id: сarrierIdNumber, name: nameCarrier }).unwrap();
+      console.log(`Доставщик с id ${сarrierIdNumber} успешно отредактирован:`, response);
+      navigate("/carriers");
     } catch (error) {
-      console.error("Категорию не получилось создать:", error);
+      console.error("Доставщика не получилось отредактировать:", error);
       setIsShowError(true);
     }
   };
@@ -118,16 +144,16 @@ export const CategoryCreatepage = () => {
         <div className="mt-32 flex justify-center items-center">
           <div className="auth_form_background">
             <h3 className="w-full mb-10 text-3xl text-center font-bold">
-              Добавление <span className="text-starkit-electric">категории</span>
+              Редактирование <span className="text-starkit-electric">доставщика</span>
             </h3>
             <div className={message != "" ? "mb-5" : "mb-10"}>
               <Label text="Название" />
               <div className="auth_div_for_input">
-                <Input onChange={inputHandler} value={nameCategory} isError={message != ""} type="text" placeholder="Введите название категории..." />
+                <Input onChange={inputHandler} value={nameCarrier} isError={message != ""} type="text" placeholder="Введите название доставщика..." />
                 {message != "" && <p className="auth_error_text">{message}</p>}
               </div>
             </div>
-            <Button onClick={createCategoryHandler} text="Готово" />
+            <Button onClick={editCarrierHandler} text="Готово" />
           </div>
         </div>
         {isShowError && (
@@ -136,9 +162,9 @@ export const CategoryCreatepage = () => {
               <img src="/images/robot_404.png" className="mt-[-128px] mb-8" />
               <h1 className="mb-4 text-center text-starkit-electric text-2xl font-bold">Извините</h1>
               <span className="mb-9 text-center text-black text-base font-medium">
-                Категорию не получилось создать.<span className="text-starkit-electric"> Уже начали исправлять данную проблему.</span>
+                Доставщика не получилось отредактировать.<span className="text-starkit-electric"> Уже начали исправлять данную проблему.</span>
               </span>
-              <a href="/categories" className="w-full">
+              <a href="/carriers" className="w-full">
                 <Button onClick={() => setIsShowError(false)} text="Понятно" />
               </a>
             </div>

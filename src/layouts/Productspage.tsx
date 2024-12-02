@@ -8,7 +8,7 @@ import { ProductCard } from "../components/ProductCard/ProductCard";
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Button } from "../components/Button/Button";
 
-import { Product } from "../entities/products/model/types";
+import type { Product } from "../entities/products/model/types";
 
 export const Productspage = () => {
   // нужно для редиректа
@@ -17,7 +17,7 @@ export const Productspage = () => {
   // определяем роль пользователя
   const role = localStorage.getItem("role");
 
-  // запрос данных с бэка
+  // получение всех продуктов
   const { data: products, isSuccess: isSuccessProducts, refetch } = useGetProductsQuery();
 
   // Извлекаем данные из localStorage
@@ -70,9 +70,41 @@ export const Productspage = () => {
       return (
         <main className="body_404">
           <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
+          {(role == "admin" || role == "superuser") && (
+            <div className=" w-full px-80 flex flex-row justify-between items-center">
+              <div className="flex flex-row gap-x-5">
+                <a href="/categories">
+                  <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Категории</h2>
+                </a>
+                <a href="/products">
+                  <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Товары</h2>
+                </a>
+                <a href="/orders">
+                  <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Заказы</h2>
+                </a>
+                <a href="/carriers">
+                  <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставщики</h2>
+                </a>
+                <a href="/shipments">
+                  <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставки</h2>
+                </a>
+                <a href="/warehouses">
+                  <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
+                </a>
+              </div>
+            </div>
+          )}
           <div className="py-32 flex items-center justify-center flex-col">
             <img src="/images/robot_404.png" className="mb-6" />
-            <p className="text-black font-bold text-2xl text-center mb-5">Все раскупили, приходите позже</p>
+            {(role == "admin" || role == "superuser") && (
+              <>
+                <p className="text-black font-bold text-2xl text-center mb-5">Пока нет товаров</p>
+                <a href="/products/create">
+                  <Button text="Новый товар" className="px-14" />
+                </a>
+              </>
+            )}
+            {role != "admin" && role != "superuser" && <p className="text-black font-bold text-2xl text-center mb-5">Все раскупили, приходите позже</p>}
           </div>
         </main>
       );
@@ -94,7 +126,10 @@ export const Productspage = () => {
                     <a href="/orders">
                       <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Заказы</h2>
                     </a>
-                    <a href="/deliveries">
+                    <a href="/carriers">
+                      <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставщики</h2>
+                    </a>
+                    <a href="/shipments">
                       <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставки</h2>
                     </a>
                     <a href="/warehouses">

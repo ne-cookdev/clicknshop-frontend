@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useGetCategoriesQuery } from "../features/api/api";
+import { useGetCategoriesQuery } from "../features/api/categoriesApi";
 import { useCreateProductMutation } from "../features/api/productsApi";
 
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Label } from "../components/Label/Label";
 import { Input } from "../components/Input/Input";
-import { ErrorIcon } from "../components/Icons/ErrorIcon";
 import { Button } from "../components/Button/Button";
 
 export const ProductCreatepage = () => {
@@ -158,10 +157,10 @@ export const ProductCreatepage = () => {
     // делаем запрос
     try {
       const response = await createProduct({ category_id: getIdByNameOfCategory(nameCategory) || 1, image_ref: imageRef, name: name, description: description, weight: weight, price: price, length: length, width: width, height: height }).unwrap();
-      console.log(`Create product "${name}" successfully:`, response);
+      console.log(`Продукт с именем "${name}"успешно создан:`, response);
       navigate("/products");
     } catch (error) {
-      console.error("Product wasn't create:", error);
+      console.error("Продукт не получилось создать:", error);
       setIsShowError(true);
     }
   };
@@ -179,11 +178,6 @@ export const ProductCreatepage = () => {
               <Label text="Категория" />
               <div className="auth_div_for_input">
                 <Input onChange={inputCategoryHandler} value={nameCategory} isError={categoryMessage != ""} type="text" placeholder="Введите название категории..." />
-                {categoryMessage != "" && (
-                  <div className="auth_div_svg">
-                    <ErrorIcon className="auth_error_svg" />
-                  </div>
-                )}
                 {categoryMessage != "" && <p className="auth_error_text">{categoryMessage}</p>}
               </div>
             </div>

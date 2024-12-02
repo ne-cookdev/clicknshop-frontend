@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const accountsApi = createApi({
-  reducerPath: "apiOne",
+  reducerPath: "accountsApi",
   keepUnusedDataFor: 10,
   baseQuery: fetchBaseQuery({
     // @ts-ignore

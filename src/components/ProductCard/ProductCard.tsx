@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { useDeleteProductMutation } from "../../features/api/productsApi";
 
@@ -103,9 +102,6 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
       setCount(value);
     }
   };
-
-  // нужно для редиректа
-  const navigate = useNavigate();
 
   // запрос на удаление товара
   const [deleteProduct] = useDeleteProductMutation();

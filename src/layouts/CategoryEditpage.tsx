@@ -3,12 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useGetCategoriesQuery, useEditCategoryMutation } from "../features/api/api";
+import { useGetCategoriesQuery, useEditCategoryMutation } from "../features/api/categoriesApi";
 
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Label } from "../components/Label/Label";
 import { Input } from "../components/Input/Input";
-import { ErrorIcon } from "../components/Icons/ErrorIcon";
 import { Button } from "../components/Button/Button";
 
 type CategoryParams = {
@@ -21,21 +20,18 @@ export const CategoryEditpage = () => {
 
   // определяем роль пользователя
   const role = localStorage.getItem("role");
-
   useEffect(() => {
     if (role !== "admin" && role !== "superuser") {
       navigate("/");
     }
   }, [role, navigate]);
 
-  // id категории (строка)
+  // id категории
   const { categoryId } = useParams<CategoryParams>();
-
-  // id категории (число)
   const categoryIdNumber = parseInt(categoryId ?? "", 10);
 
   // запрос на выход
-  const [logoutUser, { isLoading: isLogoutLoading }] = useLogoutUserMutation();
+  const [logoutUser] = useLogoutUserMutation();
   const handleLogoutProcess = async () => {
     try {
       const refreshToken = localStorage.getItem("refresh");
@@ -72,50 +68,26 @@ export const CategoryEditpage = () => {
       console.error(error);
     }
   };
-
   useEffect(() => {
     fetchLessons();
   }, []);
 
-  // запрос данных с бэка
-  const { data: categories, isLoading: isGettingCourses, isSuccess: isSuccessCategories, isError: isErrorCategories, error, refetch } = useGetCategoriesQuery();
+  // получаем все категории
+  const { data: categories, isSuccess: isSuccessCategories, error, refetch } = useGetCategoriesQuery();
 
-  /*const categories = [
-    {
-      id: 1,
-      name: "Спорт",
-    },
-    {
-      id: 2,
-      name: "Фрукты",
-    },
-    {
-      id: 3,
-      name: "Еда",
-    },
-    {
-      id: 4,
-      name: "Дом",
-    },
-    {
-      id: 5,
-      name: "Электроника",
-    },
-    {
-      id: 6,
-      name: "Ароматерапия",
-    },
-  ];*/
-
-  // получение имени категории по id
-  const getNameById = (id: number) => {
+  // определяем название категории по id
+  const getNameOfCategoryById = (id: number) => {
     const category = categories?.find((category) => category.id === id);
     return category?.name;
   };
 
-  const [nameCategory, setNameCategory] = useState<string>(getNameById(categoryIdNumber) || "");
+  // значение инпута
+  const [nameCategory, setNameCategory] = useState<string>(getNameOfCategoryById(categoryIdNumber) || "");
+
+  // значение ошибки для инпута
   const [message, setMessage] = useState<string>("");
 
+  // обработчик инпута названия
   const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setNameCategory(value);
@@ -127,33 +99,41 @@ export const CategoryEditpage = () => {
     }
   };
 
+  // обновляем значение инпута после запросов
   useEffect(() => {
     if (!isSuccessCategories) {
       return;
     }
-    setNameCategory(getNameById(categoryIdNumber) || "");
+    setNameCategory(getNameOfCategoryById(categoryIdNumber) || "");
   }, [isSuccessCategories]);
 
-  const [editCategory, { isLoading, isError, isSuccess }] = useEditCategoryMutation();
+  // запрос на редактирование категории
+  const [editCategory] = useEditCategoryMutation();
+
+  // состояние банера "Не получилось отредактировать"
   const [isShowError, setIsShowError] = useState(false);
 
+  // обработчик кнопки "Готово"
   const editCategoryHandler = async () => {
+    // проверяем, что нет ошибок
     if (message != "") {
       return;
     }
+    // проверяем, что поле заполнены
     if (nameCategory == "") {
       return;
     }
-    if (nameCategory == getNameById(categoryIdNumber)) {
+    // проверяем, что знаечния изменились
+    if (nameCategory == getNameOfCategoryById(categoryIdNumber)) {
       return;
     }
-
+    // делаем запрос
     try {
       const response = await editCategory({ id: categoryIdNumber, name: nameCategory.charAt(0).toUpperCase() + nameCategory.slice(1).toLowerCase() }).unwrap();
-      console.log(`Edit category successfully:`, response);
+      console.log(`Категория с id ${categoryIdNumber} успешно отредактирована:`, response);
       navigate("/categories");
     } catch (error) {
-      console.error("Category wasn't edit:", error);
+      console.error("Категорию не получилось отредактировать:", error);
       setIsShowError(true);
     }
   };
@@ -171,11 +151,6 @@ export const CategoryEditpage = () => {
               <Label text="Название" />
               <div className="auth_div_for_input">
                 <Input onChange={inputHandler} value={nameCategory} isError={message != ""} type="text" placeholder="Введите название категории..." />
-                {message != "" && (
-                  <div className="auth_div_svg">
-                    <ErrorIcon className="auth_error_svg" />
-                  </div>
-                )}
                 {message != "" && <p className="auth_error_text">{message}</p>}
               </div>
             </div>

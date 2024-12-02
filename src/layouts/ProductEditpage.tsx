@@ -3,13 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useGetCategoriesQuery } from "../features/api/api";
+import { useGetCategoriesQuery } from "../features/api/categoriesApi";
 import { useEditProductMutation, useGetProductsQuery } from "../features/api/productsApi";
 
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Label } from "../components/Label/Label";
 import { Input } from "../components/Input/Input";
-import { ErrorIcon } from "../components/Icons/ErrorIcon";
 import { Button } from "../components/Button/Button";
 
 type ProductParams = {
@@ -35,7 +34,7 @@ export const ProductEditpage = () => {
   // получаем все категории
   const { data: categories, isSuccess: isSuccessCategories } = useGetCategoriesQuery();
 
-  // определяем названию категории по id
+  // определяем название категории по id
   const getNameOfCategoryById = (id: number) => {
     const category = categories?.find((category) => category.id === id);
     return category?.name;
@@ -109,7 +108,7 @@ export const ProductEditpage = () => {
   const [width, setWidth] = useState<string>(getProductById(productIdNumber)?.width?.toString() || "");
   const [height, setHeight] = useState<string>(getProductById(productIdNumber)?.height?.toString() || "");
 
-  // значение ошибки для инпута категории
+  // значение ошибки для инпута
   const [categoryMessage, setCategoryMessage] = useState<string>("");
 
   // обработчик инпута категории
@@ -198,10 +197,10 @@ export const ProductEditpage = () => {
     // делаем запрос
     try {
       const response = await editProduct({ id: productIdNumber, category_id: getIdByNameOfCategory(nameCategory) || 1, image_ref: imageRef, name: name, description: description, weight: weight, price: price, length: length, width: width, height: height }).unwrap();
-      console.log(`Edit product successfully:`, response);
+      console.log(`Продукт с id ${productIdNumber} успешно отредактирована:`, response);
       navigate("/products");
     } catch (error) {
-      console.error("Product wasn't edit:", error);
+      console.error("Продукт не получилось отредактировать:", error);
       setIsShowError(true);
     }
   };
@@ -219,11 +218,6 @@ export const ProductEditpage = () => {
               <Label text="Категория" />
               <div className="auth_div_for_input">
                 <Input onChange={inputCategoryHandler} value={nameCategory} isError={categoryMessage != ""} type="text" placeholder="Введите название категории..." />
-                {categoryMessage != "" && (
-                  <div className="auth_div_svg">
-                    <ErrorIcon className="auth_error_svg" />
-                  </div>
-                )}
                 {categoryMessage != "" && <p className="auth_error_text">{categoryMessage}</p>}
               </div>
             </div>

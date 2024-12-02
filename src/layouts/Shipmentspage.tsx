@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useGetCategoriesQuery } from "../features/api/categoriesApi";
+import { useGetShipmentsQuery } from "../features/api/shipmentsApi";
 
-import { CategoryCard } from "../components/CategoryCard/CategoryCard";
+import { ShipmentCard } from "../components/ShipmentCard/ShipmentCard";
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Button } from "../components/Button/Button";
 
-import { Category } from "../entities/categories/model/types";
+import type { Shipment } from "../entities/shipments/model/types";
 
-export const Categoriespage = () => {
+export const Shipmentspage = () => {
   // нужно для редиректа
   const navigate = useNavigate();
 
@@ -22,8 +22,8 @@ export const Categoriespage = () => {
     }
   }, [role, navigate]);
 
-  // получаем все категории
-  const { data: categories, isSuccess: isSuccessCategories, error, refetch } = useGetCategoriesQuery();
+  // получаем все доставки
+  const { data: shipments, isSuccess: isSuccessShipments, refetch } = useGetShipmentsQuery();
 
   // запрос на выход
   const [logoutUser] = useLogoutUserMutation();
@@ -67,15 +67,15 @@ export const Categoriespage = () => {
     fetchLessons();
   }, []);
 
-  if (isSuccessCategories) {
-    if (categories.length == 0) {
+  if (isSuccessShipments) {
+    if (shipments.length == 0) {
       return (
         <main className="body_404">
           <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
           <div className=" w-full px-80 flex flex-row justify-between items-center">
             <div className="flex flex-row gap-x-5">
               <a href="/categories">
-                <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Категории</h2>
+                <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Категории</h2>
               </a>
               <a href="/products">
                 <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Товары</h2>
@@ -87,7 +87,7 @@ export const Categoriespage = () => {
                 <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставщики</h2>
               </a>
               <a href="/shipments">
-                <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставки</h2>
+                <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Доставки</h2>
               </a>
               <a href="/warehouses">
                 <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
@@ -96,9 +96,9 @@ export const Categoriespage = () => {
           </div>
           <div className="py-32 flex items-center justify-center flex-col">
             <img src="/images/robot_404.png" className="mb-6" />
-            <p className="text-black font-bold text-2xl text-center mb-5">Пока нет категорий</p>
-            <a href="/categories/create">
-              <Button text="Новая категория" className="px-14" />
+            <p className="text-black font-bold text-2xl text-center mb-5">Пока нет доставок</p>
+            <a href="/shipments/create">
+              <Button text="Новая доставка" className="px-14" />
             </a>
           </div>
         </main>
@@ -108,11 +108,11 @@ export const Categoriespage = () => {
         <>
           <main className="bg-starkit-magnolia">
             <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-            <div className="grid auto-cols-auto gap-y-5 justify-center items-center">
+            <div className="grid auto-rows-auto gap-y-5 justify-center items-center">
               <div className="flex flex-row justify-between items-center">
-                <div className="flex flex-row gap-x-5">
+                <div className="flex flex-row gap-x-5 items-center">
                   <a href="/categories">
-                    <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Категории</h2>
+                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Категории</h2>
                   </a>
                   <a href="/products">
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Товары</h2>
@@ -124,21 +124,22 @@ export const Categoriespage = () => {
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставщики</h2>
                   </a>
                   <a href="/shipments">
-                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставки</h2>
+                    <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Доставки</h2>
                   </a>
                   <a href="/warehouses">
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
                   </a>
                 </div>
                 <div>
-                  <a href="/categories/create">
-                    <Button text="Новая категория" className="px-14" />
+                  <a href="/shipments/create">
+                    <Button text="Новая доставка" className="px-14" />
                   </a>
                 </div>
               </div>
-              <div className="grid grid-cols-6 gap-y-[26px] gap-x-[26px]">
-                {categories.map((category: Category) => (
-                  <CategoryCard key={category.id} id={category.id} name={category.name} />
+
+              <div className="mb-12 grid grid-cols-4 gap-y-12 gap-x-16">
+                {shipments.map((shipment: Shipment) => (
+                  <ShipmentCard key={shipment.tracking_number} orderNum={shipment.order.number} status={shipment.status} trackNum={shipment.tracking_number} carrier={shipment.carrier.name} />
                 ))}
               </div>
             </div>

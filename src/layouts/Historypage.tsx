@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useGetHistoryQuery } from "../features/api/api";
+import { useGetHistoryQuery } from "../features/api/userApi";
 
 import { HistoryCard } from "../components/HistoryCard/HistoryCard";
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Button } from "../components/Button/Button";
 
-import { OrdersforHistory, HistoryProduct } from "../entities/catalog/model/types";
+import { Order, OrderDetail } from "../entities/orders/model/types";
 
 export const Historypage = () => {
   // нужно для редиректа
@@ -117,10 +117,10 @@ export const Historypage = () => {
             <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
             <div className="flex justify-center flex-col items-center">
               <div className="grid grid-cols-4 gap-y-12 gap-x-16">
-                {data.map((order: OrdersforHistory) => (
+                {data.map((order: Order) => (
                   <>
-                    {order.order_details.map((product: HistoryProduct) => (
-                      <HistoryCard order={orderData} key={`${order.number + product.product.id}`} id={product.product.id} name={product.product.name} image={product.image_ref} price={product.price_at_order} quantity={product.quantity} />
+                    {order.order_details.map((product: OrderDetail) => (
+                      <HistoryCard order={orderData} key={`${order.number + product.product.id}`} id={product.product.id} name={product.product.name} image={product.product.image_ref || ""} price={product.price_at_order} quantity={product.product.all_quantity} />
                     ))}
                   </>
                 ))}

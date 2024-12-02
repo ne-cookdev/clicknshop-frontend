@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 
-import { useDeleteCategoryMutation } from "../../features/api/api";
+import { useDeleteCategoryMutation } from "../../features/api/categoriesApi";
 
 import { EditIcon } from "../Icons/EditIcon";
 import { TrashIcon } from "../Icons/TrashIcon";
@@ -12,20 +11,17 @@ interface CategoryCardProps {
 }
 
 export const CategoryCard: React.FC<CategoryCardProps> = (props) => {
-  // нужно для редиректа
-  const navigate = useNavigate();
-
-  // Получаем хук для мутации
-  const [deleteCategory, { isLoading, isError, isSuccess }] = useDeleteCategoryMutation();
+  // удаление категории
+  const [deleteCategory] = useDeleteCategoryMutation();
 
   // обработчик иконки удаления категории
   const deleteHandler = async () => {
     try {
       const response = await deleteCategory({ id: props.id }).unwrap();
-      console.log(`delete category "${props.name}" successfully:`, response);
+      console.log(`Категория с именем "${props.name}" успешно создана:`, response);
       window.location.reload();
     } catch (error) {
-      console.error("Category wasn't delete:", error);
+      console.error("Категорию не получилось создать:", error);
     }
   };
 
@@ -33,7 +29,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = (props) => {
     <div className="categorycard_background">
       <h1 className="categorycard_name">{props.name}</h1>
       <div className="categorycard_icons_div">
-        <a href={`/category/edit/${props.id}`}>
+        <a href={`/categories/edit/${props.id}`}>
           <EditIcon className="categorycard_editicon" />
         </a>
         <TrashIcon onClick={deleteHandler} className="categorycard_trashicon" />
