@@ -21,10 +21,10 @@ export const ShipmentCard: React.FC<ShipmentCardProps> = (props) => {
   const deleteHandler = async () => {
     try {
       const response = await deleteShipment({ id: props.trackNum }).unwrap();
-      console.log(`Delete shipment "${props.trackNum}" successfully:`, response);
+      console.log(`Доставка с трек-номером "${props.trackNum}" успешно удалена:`, response);
       window.location.reload();
     } catch (error) {
-      console.error("Shipment wasn't delete:", error);
+      console.error("Доставку не получилось удалить:", error);
     }
   };
 

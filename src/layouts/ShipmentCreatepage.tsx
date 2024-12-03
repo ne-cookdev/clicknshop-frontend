@@ -119,7 +119,7 @@ export const ShipmentCreatepage = () => {
     }
   };
 
-  // запрос на создание товара
+  // запрос на создание заказа
   const [createShipment] = useCreateShipmentMutation();
 
   // состояние банера "Не получилось создать"
@@ -137,7 +137,7 @@ export const ShipmentCreatepage = () => {
     if (statusMessage != "") {
       return;
     }
-    // проверяем, что все поля (кроме картинки) заполнены
+    // проверяем, что все поля заполнены
     if (orderNum == "" || carrier == "" || status == "") {
       return;
     }

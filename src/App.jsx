@@ -20,9 +20,9 @@ import { CarrierCreatepage } from "./layouts/CarrierCreatepage";
 import { Shipmentspage } from "./layouts/Shipmentspage";
 import { ShipmentEditpage } from "./layouts/ShipmentEditpage";
 import { ShipmentCreatepage } from "./layouts/ShipmentCreatepage";
-//import { Warehousespage } from "./layouts/Warehousespage";
-//import { WarehouseEditpage } from "./layouts/WarehouseEditpage";
-//import { WarehouseCreatepage } from "./layouts/WarehouseCreatepage";
+import { Warehousespage } from "./layouts/Warehousespage";
+import { WarehouseEditpage } from "./layouts/WarehouseEditpage";
+import { WarehouseCreatepage } from "./layouts/WarehouseCreatepage";
 
 const router = createBrowserRouter([
   {
@@ -85,14 +85,14 @@ const router = createBrowserRouter([
       { path: "create", element: <ShipmentCreatepage /> },
     ],
   },
-  /*{
+  {
     path: "/warehouses",
     children: [
       { path: "", element: <Warehousespage /> },
       { path: "edit/:warehouseId", element: <WarehouseEditpage /> },
       { path: "create", element: <WarehouseCreatepage /> },
     ],
-  },*/
+  },
   {
     path: "*",
     element: <NoFoundpage />,
