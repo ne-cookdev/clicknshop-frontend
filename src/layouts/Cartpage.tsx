@@ -116,12 +116,12 @@ export const Cartpage = () => {
     });
 
     try {
-      const response = await placeOrder({ order_details: order_details, address: address }).unwrap();
-      console.log("Order submitted successfully:", response);
+      const response = await placeOrder({ user_id: 1, order_details: order_details, address: address }).unwrap();
+      console.log("Заказ успешно создан:", response);
       localStorage.setItem("order", "{}");
       loadData();
     } catch (error) {
-      console.error("Error submitting order:", error);
+      console.error("Заказ не получилось создать:", error);
       setIsShowError(true);
     }
   };

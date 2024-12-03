@@ -27,7 +27,7 @@ export const userApi = createApi({
       query: (args) => ({
         url: "/orders/",
         method: "POST",
-        body: { order_details: args.order_details, address: args.address },
+        body: { user_id: args.user_id, order_details: args.order_details, address: args.address },
       }),
     }),
   }),

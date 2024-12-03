@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useLogoutUserMutation, useUpdateAccessTokenMutation } from "../features/api/accountsApi";
-import { useGetOrdersQuery } from "../features/api/ordersApi";
+import { useGetStocksQuery } from "../features/api/stocksApi";
 
-import { OrderCard } from "../components/OrderCard/OrderCard";
+import { StockCard } from "../components/StockCard/StockCard";
 import { LogoutHeader } from "../components/LogoutHeader/LogoutHeader";
 import { Button } from "../components/Button/Button";
 
-import { Order } from "../entities/orders/model/types";
+import type { Stock } from "../entities/stocks/model/types";
 
-export const Orderspage = () => {
+export const Stockspage = () => {
   // нужно для редиректа
   const navigate = useNavigate();
 
@@ -22,8 +22,8 @@ export const Orderspage = () => {
     }
   }, [role, navigate]);
 
-  // получаем все заказы
-  const { data: orders, isSuccess: isSuccessOrders, error, refetch } = useGetOrdersQuery();
+  // получаем все кол-ва
+  const { data: stocks, isSuccess: isSuccessStocks, refetch } = useGetStocksQuery();
 
   // запрос на выход
   const [logoutUser] = useLogoutUserMutation();
@@ -67,8 +67,8 @@ export const Orderspage = () => {
     fetchLessons();
   }, []);
 
-  if (isSuccessOrders) {
-    if (orders.length == 0) {
+  if (isSuccessStocks) {
+    if (stocks.length == 0) {
       return (
         <main className="body_404">
           <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
@@ -81,7 +81,7 @@ export const Orderspage = () => {
                 <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Товары</h2>
               </a>
               <a href="/orders">
-                <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Заказы</h2>
+                <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Заказы</h2>
               </a>
               <a href="/carriers">
                 <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставщики</h2>
@@ -93,15 +93,15 @@ export const Orderspage = () => {
                 <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
               </a>
               <a href="/stocks">
-                <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Количество товаров</h2>
+                <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Количество товаров</h2>
               </a>
             </div>
           </div>
           <div className="py-32 flex items-center justify-center flex-col">
             <img src="/images/robot_404.png" className="mb-6" />
-            <p className="text-black font-bold text-2xl text-center mb-5">Пока нет заказов</p>
-            <a href="/orders/create">
-              <Button text="Новый заказ" className="px-14" />
+            <p className="text-black font-bold text-2xl text-center mb-5">Пока количество товаров не задано</p>
+            <a href="/stocks/create">
+              <Button text="Новое количество" className="px-14" />
             </a>
           </div>
         </main>
@@ -111,9 +111,9 @@ export const Orderspage = () => {
         <>
           <main className="bg-starkit-magnolia">
             <LogoutHeader role={role ? role : "user"} onClickHandler={handleLogoutProcess} />
-            <div className="w-full px-80 flex flex-col gap-y-5 justify-center items-center">
-              <div className="w-full px-4 flex flex-row justify-between items-center">
-                <div className="flex flex-row gap-x-5">
+            <div className="grid auto-rows-auto gap-y-5 justify-center items-center">
+              <div className="flex flex-row justify-between items-center">
+                <div className="flex flex-row gap-x-5 items-center">
                   <a href="/categories">
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Категории</h2>
                   </a>
@@ -121,7 +121,7 @@ export const Orderspage = () => {
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Товары</h2>
                   </a>
                   <a href="/orders">
-                    <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Заказы</h2>
+                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Заказы</h2>
                   </a>
                   <a href="/carriers">
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Доставщики</h2>
@@ -133,18 +133,19 @@ export const Orderspage = () => {
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
                   </a>
                   <a href="/stocks">
-                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Количество товаров</h2>
+                    <h2 className="cursor-pointer text-xl font-medium text-starkit-electric">Количество товаров</h2>
                   </a>
                 </div>
                 <div>
-                  <a href="/orders/create">
-                    <Button text="Новый заказ" className="px-14" />
+                  <a href="/stocks/create">
+                    <Button text="Новое количество" className="px-14" />
                   </a>
                 </div>
               </div>
-              <div className="w-full flex flex-col gap-y-7">
-                {orders.map((order: Order) => (
-                  <OrderCard key={order.number} number={order.number} products={order.order_details} user={order.user.email} date={order.order_date} status={order.status} address={order.address} />
+
+              <div className="mb-12 grid grid-cols-4 gap-y-12 gap-x-16">
+                {stocks.map((stock: Stock) => (
+                  <StockCard key={stock.id} id={stock.id} warehouse={stock.warehouse} product={stock.product} quantity={stock.quantity} />
                 ))}
               </div>
             </div>

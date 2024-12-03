@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.gradient-text {
+  background-color: #1c24aa;
+  background-image: linear-gradient(90deg, #1c24aa, #b7b8fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@layer components {
+  .stockcard_background {
+    @apply w-[370px] py-8 px-7 flex flex-col bg-white rounded-[40px];
+  }
+
+  .stockcard_name {
+    @apply w-full mb-6 text-[28px] font-bold gradient-text;
+  }
+
+  .stockcard_text {
+    @apply mt-4 text-base font-normal text-black;
+  }
+
+  .stockcard__icons_div {
+    @apply mt-1 flex flex-row gap-x-6 items-center justify-end;
+  }
+
+  .stockcard_editicon {
+    @apply w-[40px] h-[40px] fill-starkit-lavender;
+  }
+
+  .stockcard_trashicon {
+    @apply w-[30px] h-[40px] fill-starkit-lavender;
+  }
+}

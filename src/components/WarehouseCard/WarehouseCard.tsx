@@ -2,7 +2,6 @@ import React from "react";
 
 import { useDeleteWarehouseMutation } from "../../features/api/warehousesApi";
 
-import { Tag } from "../Tag/Tag";
 import { EditIcon } from "../Icons/EditIcon";
 import { TrashIcon } from "../Icons/TrashIcon";
 

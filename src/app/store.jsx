@@ -6,6 +6,7 @@ import { categoriesApi } from "../features/api/categoriesApi";
 import { ordersApi } from "../features/api/ordersApi";
 import { productsApi } from "../features/api/productsApi";
 import { shipmentsApi } from "../features/api/shipmentsApi";
+import { stocksApi } from "../features/api/stocksApi";
 import { userApi } from "../features/api/userApi";
 import { warehousesApi } from "../features/api/warehousesApi";
 
@@ -19,10 +20,11 @@ const store = configureStore({
     [ordersApi.reducerPath]: ordersApi.reducer,
     [productsApi.reducerPath]: productsApi.reducer,
     [shipmentsApi.reducerPath]: shipmentsApi.reducer,
+    [stocksApi.reducerPath]: stocksApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [warehousesApi.reducerPath]: warehousesApi.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(accountsApi.middleware, carriersApi.middleware, categoriesApi.middleware, ordersApi.middleware, productsApi.middleware, shipmentsApi.middleware, userApi.middleware, warehousesApi.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(accountsApi.middleware, carriersApi.middleware, categoriesApi.middleware, ordersApi.middleware, productsApi.middleware, shipmentsApi.middleware, stocksApi.middleware, userApi.middleware, warehousesApi.middleware),
 });
 
 setupListeners(store.dispatch);

@@ -92,6 +92,9 @@ export const Shipmentspage = () => {
               <a href="/warehouses">
                 <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
               </a>
+              <a href="/stocks">
+                <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Количество товаров</h2>
+              </a>
             </div>
           </div>
           <div className="py-32 flex items-center justify-center flex-col">
@@ -128,6 +131,9 @@ export const Shipmentspage = () => {
                   </a>
                   <a href="/warehouses">
                     <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
+                  </a>
+                  <a href="/stocks">
+                    <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Количество товаров</h2>
                   </a>
                 </div>
                 <div>

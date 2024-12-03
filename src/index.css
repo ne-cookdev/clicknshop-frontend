@@ -11,6 +11,7 @@
 @import "./components/LittleProductCard/LittleProductCard.css";
 @import "./components/ShipmentCard/ShipmentCard.css";
 @import "./components/WarehouseCard/WarehouseCard.css";
+@import "./components/StockCard/StockCard.css";
 @import "./layouts/layouts_styles/Authpages.css";
 @import "./layouts/layouts_styles/Loginpage.css";
 @import "./layouts/layouts_styles/NoFoundpage.css";

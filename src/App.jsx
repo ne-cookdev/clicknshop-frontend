@@ -23,6 +23,9 @@ import { ShipmentCreatepage } from "./layouts/ShipmentCreatepage";
 import { Warehousespage } from "./layouts/Warehousespage";
 import { WarehouseEditpage } from "./layouts/WarehouseEditpage";
 import { WarehouseCreatepage } from "./layouts/WarehouseCreatepage";
+import { Stockspage } from "./layouts/Stockspage";
+import { StockEditpage } from "./layouts/StockEditpage";
+import { StockCreatepage } from "./layouts/StockCreatepage";
 
 const router = createBrowserRouter([
   {
@@ -91,6 +94,14 @@ const router = createBrowserRouter([
       { path: "", element: <Warehousespage /> },
       { path: "edit/:warehouseId", element: <WarehouseEditpage /> },
       { path: "create", element: <WarehouseCreatepage /> },
+    ],
+  },
+  {
+    path: "/stocks",
+    children: [
+      { path: "", element: <Stockspage /> },
+      { path: "edit/:stockId", element: <StockEditpage /> },
+      { path: "create", element: <StockCreatepage /> },
     ],
   },
   {

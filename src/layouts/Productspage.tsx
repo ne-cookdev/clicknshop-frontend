@@ -91,6 +91,9 @@ export const Productspage = () => {
                 <a href="/warehouses">
                   <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
                 </a>
+                <a href="/stocks">
+                  <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Количество товаров</h2>
+                </a>
               </div>
             </div>
           )}
@@ -134,6 +137,9 @@ export const Productspage = () => {
                     </a>
                     <a href="/warehouses">
                       <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Склады</h2>
+                    </a>
+                    <a href="/stocks">
+                      <h2 className="cursor-pointer text-xl font-medium text-starkit-lavender">Количество товаров</h2>
                     </a>
                   </div>
                   <div>
