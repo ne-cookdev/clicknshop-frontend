@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .button {
+    @apply w-full flex items-center py-3 justify-center font-semibold text-white bg-starkit-button hover:bg-starkit-hoverbutton focus:bg-starkit-focusbutton transition-all duration-500;
+  }
+}

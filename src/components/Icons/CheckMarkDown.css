@@ -1,0 +1,37 @@
+.toggle-button {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.line-1,
+.line-2 {
+  display: block;
+  width: 11px;
+  height: 2px;
+  background-color: #b7b8fb;
+  border-radius: 1px;
+  transition: all 0.3s ease-in-out;
+}
+
+.line-1 {
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.line-2 {
+  transform: rotate(45deg);
+  position: absolute;
+  top: 0px;
+  left: 7px;
+}
+
+.toggle-button.open .line-1 {
+  transform: rotate(45deg);
+}
+
+.toggle-button.open .line-2 {
+  transform: rotate(-45deg);
+}

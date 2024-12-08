@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.gradient-text {
+  background-color: #1c24aa;
+  background-image: linear-gradient(90deg, #1c24aa, #b7b8fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@layer components {
+  .card_background {
+    @apply w-[370px] flex flex-col bg-white rounded-[40px];
+  }
+
+  .card_img_div {
+    @apply h-[270px] rounded-t-[40px] rounded-b-[20px] z-[2];
+  }
+
+  .card_img {
+    @apply w-full h-full object-cover rounded-t-[40px] rounded-b-[20px];
+  }
+
+  .card_info_part {
+    @apply flex flex-col justify-start pt-4 pb-[30px] px-5 bg-white rounded-b-[40px];
+  }
+
+  .card_tags_div {
+    @apply mb-3;
+  }
+
+  .card_name {
+    @apply w-full mb-3 text-[28px] font-bold gradient-text;
+  }
+
+  .card_description {
+    @apply w-full mb-1 text-sm font-normal text-black;
+  }
+
+  .card_quantity_price_div {
+    @apply w-full mb-3 flex flex-row items-center justify-between;
+  }
+
+  .card_quantity {
+    @apply text-sm font-normal text-black;
+  }
+
+  .card_price {
+    @apply text-[28px] font-bold text-starkit-electric;
+  }
+
+  .card_icons_div {
+    @apply flex flex-row gap-x-6 items-center justify-end;
+  }
+
+  .card_editicon {
+    @apply w-[40px] h-[40px] fill-starkit-lavender;
+  }
+
+  .card_trashicon {
+    @apply w-[30px] h-[40px] fill-starkit-lavender;
+  }
+
+  .card_buttons_div {
+    @apply grid grid-cols-[1fr_3fr_1fr] gap-x-3.5;
+  }
+}

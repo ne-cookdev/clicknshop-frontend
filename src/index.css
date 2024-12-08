@@ -1,0 +1,60 @@
+@import "./components/Button/Button.css";
+@import "./components/Card/Card.css";
+@import "./components/CardLesson/CardLesson.css";
+@import "./components/CardTheme/CardTheme.css";
+@import "./components/Icons/CheckMarkDown.css";
+@import "./components/Input/Input.css";
+@import "./components/Label/Label.css";
+@import "./components/LogoutHeader/LogoutHeader.css";
+@import "./components/Tag/Tag.css";
+@import "./components/Tip/Tip.css";
+@import "./components/Title/Title.css";
+@import "./layouts/layouts_styles/Authpages.css";
+@import "./layouts/layouts_styles/Loginpage.css";
+@import "./layouts/layouts_styles/NoFoundpage.css";
+@import "./layouts/layouts_styles/Registerpage.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-family: "Roboto", sans-serif;
+}
+
+html {
+  height: 100dvh;
+}
+
+body {
+  height: 100dvh;
+  background-color: #f2f2fe;
+}
+
+.body_auth {
+  height: 100dvh;
+  background-color: #e5e5fe;
+}
+
+.body_404 {
+  height: 100dvh;
+  background-image: url("/images/background_404.png");
+  background-position: top;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+main {
+  background-color: #f2f2fe;
+}
+
+@media (max-height: 740px) {
+  .body_auth {
+    padding-top: 50px;
+  }
+
+  .body_auth {
+    height: auto;
+  }
+}

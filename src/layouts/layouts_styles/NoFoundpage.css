@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .page404_div {
+    @apply h-dvh flex items-center justify-center flex-col px-7;
+  }
+
+  .page404_h1 {
+    @apply text-starkit-electric font-bold text-7xl text-center;
+  }
+
+  .page404_text {
+    @apply text-black font-bold text-2xl text-center;
+  }
+}

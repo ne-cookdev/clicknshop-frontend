@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.gradient-text {
+  background-color: #1c24aa;
+  background-image: linear-gradient(90deg, #1c24aa, #b7b8fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@layer components {
+  .cardtheme_background {
+    @apply w-full px-9 py-7 flex max-[1060px]:flex-col flex-row justify-start items-start bg-white;
+  }
+
+  .cardtheme_left_part {
+    @apply max-[1060px]:w-full w-[50%] flex flex-col;
+  }
+
+  .cardtheme_tags_div {
+    @apply w-full flex flex-wrap gap-y-2 items-center mb-4;
+  }
+
+  .cardtheme_blue_tag_div {
+    @apply mr-1.5 max-[425px]:py-0 py-1 max-[425px]:px-2 px-2.5 rounded-[20px] justify-center items-center inline-flex bg-starkit-indigo;
+  }
+
+  .cardtheme_blue_tag_span {
+    @apply text-center text-white max-[425px]:text-[10px] text-xs font-normal;
+  }
+
+  .cardtheme_name {
+    @apply mb-4 max-[555px]:text-2xl text-[28px] font-bold leading-9 gradient-text;
+  }
+
+  .cardtheme_description {
+    @apply w-full text-sm font-normal text-black;
+  }
+
+  .cardtheme_right_part {
+    @apply max-[1060px]:w-full w-[50%] max-[1060px]:mt-7 max-[1060px]:px-0 pl-7 max-[1840px]:pr-7 pr-24 grid max-[440px]:grid-cols-1 max-[655px]:grid-cols-2 max-[1060px]:grid-cols-3 max-[1380px]:grid-cols-2 max-[1705px]:grid-cols-3 grid-cols-4 items-stretch justify-center gap-2.5;
+  }
+}
